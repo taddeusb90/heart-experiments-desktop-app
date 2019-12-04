@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { SerialportService } from "../serialport.service";
+import { SerialportService } from "../../services/serialport/serialport.service";
 import { WebcamImage } from 'ngx-webcam';
 
 

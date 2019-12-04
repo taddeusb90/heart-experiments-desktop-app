@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ElectronService } from './core/services';
+import { ElectronService } from './services/electron/electron.service';
 import { TranslateService } from '@ngx-translate/core';
 import { AppConfig } from '../environments/environment';
 
@@ -19,6 +19,7 @@ export class AppComponent {
     if (electronService.isElectron) {
       console.log(process.env);
       console.log('Mode electron');
+      console.log('All electron service', electronService);
       console.log('Electron ipcRenderer', electronService.ipcRenderer);
       console.log('NodeJS childProcess', electronService.childProcess);
     } else {
