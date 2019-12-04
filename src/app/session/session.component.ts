@@ -1,13 +1,22 @@
 import { Component, OnInit } from "@angular/core";
 import { SerialportService } from "../serialport.service";
+import { WebcamImage } from 'ngx-webcam';
+
 
 @Component({
-  selector: "app-home",
-  templateUrl: "./home.component.html",
-  styleUrls: ["./home.component.scss"]
+  selector: "app-session",
+  templateUrl: "./session.component.html",
+  styleUrls: ["./session.component.scss"]
 })
-export class HomeComponent implements OnInit {
+export class SessionComponent implements OnInit {
+  public webcamImage : WebcamImage = null;
+  
   constructor(private SerialportSrv: SerialportService) {}
+
+  handleImage = (webcamImage: WebcamImage) => {
+    this.webcamImage = webcamImage;
+  }
+
 
   ngOnInit(): void {
     this.SerialportSrv.serialPort
