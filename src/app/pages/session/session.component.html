@@ -1,5 +1,7 @@
-<app-camera (pictureTaken)="handleImage($event)"></app-camera>
-
-<div class="snapshot" *ngIf="webcamImage">
-	<img [src]="webcamImage.imageAsDataUrl" />
+<div class="session-container">
+	<app-camera (pictureTaken)="handleImage($event)"></app-camera>
+	<app-session-controls></app-session-controls>
+	<div class="snapshot" *ngIf="webcamImage">
+		<img [src]="webcamImage.imageAsDataUrl" />
+	</div>
 </div>
