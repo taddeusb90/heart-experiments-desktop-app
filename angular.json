@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "angular-electron": {
+    "heart-experiments-desktop": {
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
@@ -87,24 +87,24 @@
         "serve": {
           "builder": "@angular-builders/custom-webpack:dev-server",
           "options": {
-            "browserTarget": "angular-electron:build"
+            "browserTarget": "heart-experiments-desktop:build"
           },
           "configurations": {
             "dev": {
-              "browserTarget": "angular-electron:build:dev"
+              "browserTarget": "heart-experiments-desktop:build:dev"
             },
             "web": {
-              "browserTarget": "angular-electron:build:web"
+              "browserTarget": "heart-experiments-desktop:build:web"
             },
             "production": {
-              "browserTarget": "angular-electron:build:production"
+              "browserTarget": "heart-experiments-desktop:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "angular-electron:build"
+            "browserTarget": "heart-experiments-desktop:build"
           }
         },
         "test": {
@@ -140,7 +140,7 @@
         }
       }
     },
-    "angular-electron-e2e": {
+    "heart-experiments-desktop-e2e": {
       "root": "e2e",
       "projectType": "application",
       "architect": {
@@ -155,7 +155,7 @@
       }
     }
   },
-  "defaultProject": "angular-electron",
+  "defaultProject": "heart-experiments-desktop",
   "schematics": {
     "@schematics/angular:component": {
       "prefix": "app",
