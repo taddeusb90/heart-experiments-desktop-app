@@ -10,6 +10,7 @@ import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { SessionModule } from './pages/session/session.module';
 import { AppComponent } from './app.component';
+import { WebviewDirective } from './directives/webview/webview.directive';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
@@ -17,7 +18,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
 }
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent, WebviewDirective],
   imports: [
     BrowserModule,
     FormsModule,
