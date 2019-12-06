@@ -1,0 +1,8 @@
+.camera-container {
+  position: relative;
+  display: inline-block;
+  .camera-switch {
+    position: absolute;
+    right: 4px;
+  }
+}

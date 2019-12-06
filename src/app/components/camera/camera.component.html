@@ -1,5 +1,4 @@
-<div style="text-align:center">
-	<div>
+<div class="camera-container">
 		<webcam 
 			[height]="500" 
 			[width]="500" 
@@ -11,22 +10,17 @@
 			[videoOptions]="cameraService.videoOptions" 
 			(cameraSwitched)="cameraService.cameraWasSwitched($event)"
 			(initError)="cameraService.handleInitError($event)"></webcam>
-		<br/>
-		<!-- <div 
-			class="actionBtn" 
-			(click)="cameraService.triggerSnapshot();" 
-			title="Take Picture">
-			📸
-		</div> -->
-		<div class="actionBtn" 
+		<button 
+			class="camera-switch"
+			mat-fab 
+			color="primary" 
 			(click)="cameraService.showNextWebcam(true);" 
-			title="Switch Camera">
-			🔁
-		</div>
-	</div>
+			title="Switch Camera" >
+			<mat-icon mat-fab aria-hidden="false">cached</mat-icon>
+		</button>
 </div>
 
 <h4 *ngIf="cameraService.errors.length > 0">Messages:</h4>
 <ul *ngFor="let error of cameraService.errors">
 	<li>{{error | json}}</li>
-</ul>
+</ul> 

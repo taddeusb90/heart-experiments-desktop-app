@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, HostBinding } from '@angular/core';
+import { OverlayContainer } from '@angular/cdk/overlay';
 import { ElectronService } from './services/electron/electron.service';
 import { TranslateService } from '@ngx-translate/core';
 import { AppConfig } from '../environments/environment';
@@ -9,12 +10,17 @@ import { AppConfig } from '../environments/environment';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
+  @HostBinding('class') componentCssClass;
+
   constructor(
     public electronService: ElectronService,
+    public overlayContainer: OverlayContainer,
     private translate: TranslateService
   ) {
     translate.setDefaultLang('en');
     console.log('AppConfig', AppConfig);
+    this.overlayContainer.getContainerElement().classList.add('default-theme');
+    this.componentCssClass = 'default-theme';
 
     if (electronService.isElectron) {
       console.log(process.env);
@@ -26,4 +32,17 @@ export class AppComponent {
       console.log('Mode web');
     }
   }
+
+  minimizeApp() {
+    this.electronService.ipcRenderer.send('app-minimize', true);
+  }
+
+  maximizeApp() {
+    this.electronService.ipcRenderer.send('app-maximize', true);
+  }
+
+  closeApp() {
+    this.electronService.ipcRenderer.send('app-close', true);
+  }
+
 }
