@@ -83,7 +83,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     MatTabsModule,
     MatToolbarModule,
     MatTooltipModule,
-    MatTreeModule
+    MatTreeModule,
+    BrowserAnimationsModule,
+    BrowserModule,
   ],
   exports: [
     CdkTableModule,
@@ -122,7 +124,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     MatTabsModule,
     MatToolbarModule,
     MatTooltipModule,
-    MatTreeModule
+    MatTreeModule,
+    BrowserAnimationsModule,
+    BrowserModule,
   ]
 })
 export class MaterialModule {}

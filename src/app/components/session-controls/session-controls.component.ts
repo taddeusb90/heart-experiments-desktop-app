@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { SessionService } from '../../services/session/session.service';
+import { COMPLETE, INCOMPLETE } from '../../constants/decellularization-statuses'; 
+
+
 
 @Component({
   selector: 'app-session-controls',
@@ -7,11 +10,27 @@ import { SessionService } from '../../services/session/session.service';
   styleUrls: ['./session-controls.component.scss']
 })
 export class SessionControlsComponent implements OnInit {
+  public decellularizationStatuses: Array<Object> = [
+    {
+      viewValue: 'Complete',
+      value: COMPLETE
+    },
+    {
+      viewValue: 'Incomplete',
+      value: INCOMPLETE
+    }
+  ];
+  
+  public selectedStatus: string = INCOMPLETE;
 
   constructor(private sessionService: SessionService) { }
 
   ngOnInit() {
+    this.sessionService.setDecellularizationStatus(INCOMPLETE);
   }
+
+  public setDecellularizationStatus = () =>
+    this.sessionService.setDecellularizationStatus(this.selectedStatus);
 
   public begin = (): void => {
     this.sessionService.startSession();

@@ -5,6 +5,7 @@ import { Injectable } from '@angular/core';
 import { ipcRenderer, webFrame, remote } from 'electron';
 import * as childProcess from 'child_process';
 import * as fs from 'fs';
+import * as base64Img from 'base64-img';
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +16,7 @@ export class ElectronService {
   remote: typeof remote;
   childProcess: typeof childProcess;
   fs: typeof fs;
+  base64Img: typeof base64Img;
 
   get isElectron(): boolean {
     return window && window.process && window.process.type;
@@ -29,6 +31,7 @@ export class ElectronService {
 
       this.childProcess = window.require('child_process');
       this.fs = window.require('fs');
+      this.base64Img = window.require('base64-img');
     }
   }
 }

@@ -49,7 +49,6 @@ export class CameraService {
   }
 
   public handleImage(webcamImage: WebcamImage): void {
-    console.info('received webcam image', webcamImage);
     this.picture.next(webcamImage);
   }
 

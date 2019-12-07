@@ -13,7 +13,8 @@ export class SerialportService {
   public arduinoSerialPort: any;
   public port: any;
   public parser: any;
-  private confirmation: Subject<string> = new Subject<string>();
+  public confirmationSubject: Subject<string> = new Subject<string>();
+  public confirmationObservable: Observable<string>;
 
   constructor() {
     if (!SerialportService.instance) {
@@ -34,6 +35,8 @@ export class SerialportService {
         setTimeout(()=> this.port.write(`INIT\r\n`), 500);
         this.parser = this.port.pipe(new Readline({delimiter: '\r\n'}));
         this.parser.on('data', this.getConfirmation);
+
+        this.confirmationObservable = this.confirmationSubject.asObservable();
       })
       .catch((err: any) => {
         console.log(err);
@@ -41,15 +44,11 @@ export class SerialportService {
   }
 
   private getConfirmation = (line: string): void => {
-    console.log(`> ${line}`);
-    this.confirmation.next(line)
+    this.confirmationSubject.next(line)
   } 
 
   public sendMessageToBoard(message): void {
-    this.port.write(`${message}\r\n`)
-    this.confirmation
-      .asObservable()
-      .subscribe(data=> console.log(`confirmation> ${data}`));
+    this.port.write(`${message}\r\n`);
   }
 
 }

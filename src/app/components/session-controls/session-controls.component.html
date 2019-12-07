@@ -1,3 +1,4 @@
+<br>
 <div class="controls-container">
   <button
     mat-raised-button 
@@ -30,4 +31,15 @@
     (click)="reset()"
     [disabled]="!shouldEnableResetButton()"
     >Reset</button>
+</div>
+<br>
+<div class="select-container">
+  <mat-form-field>
+    <mat-label>Decellularization status</mat-label>
+    <mat-select [(value)]="selectedStatus" (selectionChange)="setDecellularizationStatus($event)"> 
+      <mat-option *ngFor="let ds of decellularizationStatuses" [value]="ds.value">
+        {{ds.viewValue}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
 </div>
