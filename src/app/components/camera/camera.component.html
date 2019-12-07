@@ -2,6 +2,7 @@
 		<webcam 
 			[height]="500" 
 			[width]="500" 
+			[imageQuality]="cameraService.imageQuality"
 			[trigger]="cameraService.triggerObservable" 
 			(imageCapture)="cameraService.handleImage($event)"
 			*ngIf="cameraService.showWebcam"

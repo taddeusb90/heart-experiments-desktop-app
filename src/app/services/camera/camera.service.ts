@@ -11,7 +11,14 @@ export class CameraService {
   public allowCameraSwitch = true;
   public multipleWebcamsAvailable = false;
   public deviceId: string;
+  public imageQuality: number = 1;
   public videoOptions: MediaTrackConstraints = {
+    width: 1280,
+    height: 720,
+    frameRate: {
+      ideal: 60,
+      min: 10
+    }
   };
   public errors: WebcamInitError[] = [];
   
