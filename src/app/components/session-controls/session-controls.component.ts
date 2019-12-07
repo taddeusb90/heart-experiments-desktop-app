@@ -52,6 +52,10 @@ export class SessionControlsComponent implements OnInit {
     this.sessionService.resetMotorPosition();
   }
 
+  public hardReset = (): void => {
+    this.sessionService.hardResetMotorPosition();
+  }
+
   public shouldDisplayBeginButton = (): boolean => 
     this.sessionService.shouldDisplayBeginButton()
   

@@ -124,6 +124,12 @@ export class SessionService {
 
   public resetMotorPosition = (): void => {
     this.sessionStatus = PAUSED;
+    this.serialportService.sendMessageToBoard(RESET);
+  }
+
+  public hardResetMotorPosition = (): void => {
+    this.sessionStatus = PAUSED;
+    this.sessionTimestamp = Math.round((new Date()).getTime() / 1000);
     this.serialportService.sendMessageToBoard(HOME);
   }
 

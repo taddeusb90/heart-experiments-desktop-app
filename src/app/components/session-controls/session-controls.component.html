@@ -36,10 +36,16 @@
 <div class="select-container">
   <mat-form-field>
     <mat-label>Decellularization status</mat-label>
-    <mat-select [(value)]="selectedStatus" (selectionChange)="setDecellularizationStatus($event)"> 
+    <mat-select [(value)]="selectedStatus" (selectionChange)="setDecellularizationStatus()"> 
       <mat-option *ngFor="let ds of decellularizationStatuses" [value]="ds.value">
         {{ds.viewValue}}
       </mat-option>
     </mat-select>
+    
   </mat-form-field>
+  <button 
+    mat-raised-button 
+    color="warn" 
+    (click)="hardReset()"
+    >Hard Reset</button>
 </div>
