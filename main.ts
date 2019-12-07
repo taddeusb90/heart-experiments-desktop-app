@@ -14,13 +14,15 @@ function createWindow(): BrowserWindow {
   win = new BrowserWindow({
     x: 0,
     y: 0,
-    width: size.width,
-    height: size.height,
+    width: 555, // size.width,
+    height: 800, // size.height,
     webPreferences: {
       nodeIntegration: true,
       allowRunningInsecureContent: serve ? true : false
     }
   });
+
+  win.setMenu(null);
 
   if (serve) {
     require("electron-reload")(__dirname, {
@@ -36,7 +38,7 @@ function createWindow(): BrowserWindow {
       })
     );
   }
-  win.webContents.openDevTools();
+  // win.webContents.openDevTools();
   if (serve) {
     win.webContents.openDevTools();
   }

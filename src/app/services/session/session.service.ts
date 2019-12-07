@@ -1,16 +1,31 @@
-import { Injectable } from '@angular/core';
-import { SerialportService } from '../serialport/serialport.service';
-import { STARTED, NOT_STARTED, PAUSED, ENDED } from '../../constants/session-statuses';
-import { BEGIN, CONTINUE, RESET, PAUSE, END, HOME } from '../../constants/messages';
-import { COMPLETE, INCOMPLETE } from '../../constants/decellularization-statuses';
-import { ElectronService } from '../electron/electron.service';
-import { CameraService } from '../camera/camera.service';
-import { WebcamImage } from 'ngx-webcam';
+import { Injectable } from "@angular/core";
+import { SerialportService } from "../serialport/serialport.service";
+import {
+  STARTED,
+  NOT_STARTED,
+  PAUSED,
+  ENDED
+} from "../../constants/session-statuses";
+import {
+  BEGIN,
+  CONTINUE,
+  RESET,
+  PAUSE,
+  END,
+  HOME
+} from "../../constants/messages";
+import {
+  COMPLETE,
+  INCOMPLETE
+} from "../../constants/decellularization-statuses";
+import { ElectronService } from "../electron/electron.service";
+import { CameraService } from "../camera/camera.service";
+import { WebcamImage } from "ngx-webcam";
 
 const WAIT_BETWEEN_PHOTOS = 1000;
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root"
 })
 export class SessionService {
   static instance: SessionService;
@@ -18,35 +33,41 @@ export class SessionService {
   public decellularizationStatus: string;
   public sessionTimestamp: number;
   constructor(
-    public serialportService: SerialportService, 
-    public electronService: ElectronService, 
+    public serialportService: SerialportService,
+    public electronService: ElectronService,
     public cameraService: CameraService
-    ) { 
+  ) {
     if (!SessionService.instance) {
       SessionService.instance = this;
     }
     SessionService.instance.sessionStatus = NOT_STARTED;
     SessionService.instance.decellularizationStatus = INCOMPLETE;
     serialportService.init();
-    cameraService.pictureObservable.subscribe(this.processPicture)
-    setTimeout(() => serialportService.confirmationObservable.subscribe(this.processConfirmation), 2000);
-    
+    cameraService.pictureObservable.subscribe(this.processPicture);
+    setTimeout(
+      () =>
+        serialportService.confirmationObservable.subscribe(
+          this.processConfirmation
+        ),
+      2000
+    );
+
     return SessionService.instance;
   }
 
-  private processConfirmation = (data: string ) => {
-    console.log(`confirmation> ${data}`)
+  private processConfirmation = (data: string) => {
+    console.log(`confirmation> ${data}`);
     switch (data) {
       case BEGIN:
         setTimeout(() => {
           this.cameraService.triggerSnapshot();
-          this.doContinue()
+          this.doContinue();
         }, WAIT_BETWEEN_PHOTOS);
         break;
       case CONTINUE:
-        setTimeout(() => { 
+        setTimeout(() => {
           this.cameraService.triggerSnapshot();
-          this.doContinue()
+          this.doContinue();
         }, WAIT_BETWEEN_PHOTOS);
         break;
       case RESET:
@@ -62,18 +83,30 @@ export class SessionService {
     }
   }
 
-  private processPicture = ( picture: WebcamImage) => {
+  private processPicture = (picture: WebcamImage) => {
     const { base64Img } = this.electronService;
-    const pictureTimestamp = Math.round((new Date()).getTime() / 1000);
+    const pictureTimestamp = Math.round(new Date().getTime() / 1000);
+    const saveDir = `${
+      process.env[process.platform == "win32" ? "USERPROFILE" : "HOME"]
+    }/Documents/heart-experiments/sessions/${
+      this.sessionTimestamp
+    }/${this.decellularizationStatus.toLocaleLowerCase()}`;
+    console.log("savedir: ", saveDir);
     if (this.decellularizationStatus === INCOMPLETE) {
       console.log(INCOMPLETE, picture);
-      
-      base64Img.img(picture.imageAsDataUrl, `dest/${this.sessionTimestamp}/incomplete`, pictureTimestamp, function(err, filepath) {
+
+      base64Img.img(picture.imageAsDataUrl, saveDir, pictureTimestamp, function(
+        err,
+        filepath
+      ) {
         console.log(err, filepath);
       });
     } else if (this.decellularizationStatus === COMPLETE) {
       console.log(COMPLETE, picture);
-      base64Img.img(picture.imageAsDataUrl, `dest/${this.sessionTimestamp}/complete`, pictureTimestamp, function(err, filepath) {
+      base64Img.img(picture.imageAsDataUrl, saveDir, pictureTimestamp, function(
+        err,
+        filepath
+      ) {
         console.log(err, filepath);
       });
     } else {

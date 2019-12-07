@@ -30,11 +30,17 @@ export class SerialportService {
     this.serialPort
       .list()
       .then((ports: any) => {
-        this.arduinoSerialPortDetails = ports.filter(port => port.manufacturer && port.manufacturer.indexOf('arduino') > -1)[0];
-        this.port = new serialPort(this.arduinoSerialPortDetails.comName, { baudRate: 9600 });
-        setTimeout(()=> this.port.write(`INIT\r\n`), 500);
-        this.parser = this.port.pipe(new Readline({delimiter: '\r\n'}));
-        this.parser.on('data', this.getConfirmation);
+        console.log("all ports", ports);
+        this.arduinoSerialPortDetails = ports.filter(
+          port => port.manufacturer && port.vendorId.indexOf("2341") > -1
+        )[0];
+        console.log("arduport", this.arduinoSerialPortDetails);
+        this.port = new serialPort(this.arduinoSerialPortDetails.comName, {
+          baudRate: 9600
+        });
+        setTimeout(() => this.port.write(`INIT\r\n`), 500);
+        this.parser = this.port.pipe(new Readline({ delimiter: "\r\n" }));
+        this.parser.on("data", this.getConfirmation);
 
         this.confirmationObservable = this.confirmationSubject.asObservable();
       })
