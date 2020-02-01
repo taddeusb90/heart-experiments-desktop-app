@@ -22,7 +22,7 @@ import { ElectronService } from "../electron/electron.service";
 import { CameraService } from "../camera/camera.service";
 import { WebcamImage } from "ngx-webcam";
 
-const WAIT_BETWEEN_PHOTOS = 1000;
+const WAIT_BETWEEN_PHOTOS = 2000;
 
 @Injectable({
   providedIn: "root"
