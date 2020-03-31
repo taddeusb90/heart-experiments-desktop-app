@@ -38,7 +38,7 @@ function createWindow(): BrowserWindow {
       })
     );
   }
-  // win.webContents.openDevTools();
+  win.webContents.openDevTools();
   if (serve) {
     win.webContents.openDevTools();
   }

@@ -20,6 +20,7 @@ import {
 } from "../../constants/decellularization-statuses";
 import { ElectronService } from "../electron/electron.service";
 import { CameraService } from "../camera/camera.service";
+import { SpectrometerService } from "../spectrometer/spectrometer.service";
 import { WebcamImage } from "ngx-webcam";
 
 const WAIT_BETWEEN_PHOTOS = 1000;
@@ -35,22 +36,29 @@ export class SessionService {
   constructor(
     public serialportService: SerialportService,
     public electronService: ElectronService,
-    public cameraService: CameraService
+    public cameraService: CameraService,
+    public spectrometerService: SpectrometerService
   ) {
     if (!SessionService.instance) {
       SessionService.instance = this;
     }
     SessionService.instance.sessionStatus = NOT_STARTED;
     SessionService.instance.decellularizationStatus = INCOMPLETE;
-    serialportService.init();
+    // serialportService.init();
+    
     cameraService.pictureObservable.subscribe(this.processPicture);
-    setTimeout(
-      () =>
-        serialportService.confirmationObservable.subscribe(
-          this.processConfirmation
-        ),
-      2000
-    );
+
+     setTimeout(
+        () => {
+          cameraService.triggerSnapshot();
+        }, 2000);
+    // setTimeout(
+    //   () =>
+    //     serialportService.confirmationObservable.subscribe(
+    //       this.processConfirmation
+    //     ),
+    //   2000
+    // );
 
     return SessionService.instance;
   }
@@ -84,7 +92,8 @@ export class SessionService {
   }
 
   private processPicture = (picture: WebcamImage) => {
-    const { base64Img } = this.electronService;
+    debugger;
+    const { base64Img, sharp } = this.electronService;
     const pictureTimestamp = Math.round(new Date().getTime() / 1000);
     const saveDir = `${
       process.env[process.platform == "win32" ? "USERPROFILE" : "HOME"]
@@ -94,7 +103,7 @@ export class SessionService {
     console.log("savedir: ", saveDir);
     if (this.decellularizationStatus === INCOMPLETE) {
       console.log(INCOMPLETE, picture);
-
+      debugger;
       base64Img.img(picture.imageAsDataUrl, saveDir, pictureTimestamp, function(
         err,
         filepath

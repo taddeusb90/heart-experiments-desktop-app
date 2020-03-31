@@ -27,7 +27,7 @@
     "ng:serve": "ng serve",
     "ng:serve:web": "ng serve -c web -o",
     "electron:serve-tsc": "tsc -p tsconfig-serve.json",
-    "electron:serve": "wait-on http-get://localhost:4200/ && npm run electron:serve-tsc && electron . --serve",
+    "electron:serve": "npm run build:dev && electron .",
     "electron:local": "npm run build:prod && electron .",
     "electron:linux": "npm run build:prod && electron-builder build --linux",
     "electron:windows": "npm run build:prod && electron-builder build --windows",
@@ -91,9 +91,11 @@
     "@angular/forms": "^8.0.0 || ^9.0.0-0",
     "@angular/material": "8.2.3",
     "@types/serialport": "^6.0.3",
+    "@types/sharp": "0.24.0",
     "base64-img": "1.0.4",
     "material-design-icons": "3.0.1",
     "ngx-webcam": "^0.2.6",
-    "serialport": "^7.1.5"
+    "serialport": "^7.1.5",
+    "sharp": "0.23.4"
   }
 }

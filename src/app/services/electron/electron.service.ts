@@ -6,6 +6,7 @@ import { ipcRenderer, webFrame, remote } from 'electron';
 import * as childProcess from 'child_process';
 import * as fs from 'fs';
 import * as base64Img from 'base64-img';
+import * as sharp from 'sharp';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +18,8 @@ export class ElectronService {
   childProcess: typeof childProcess;
   fs: typeof fs;
   base64Img: typeof base64Img;
-
+  sharp: typeof sharp;
+  
   get isElectron(): boolean {
     return window && window.process && window.process.type;
   }
@@ -32,6 +34,7 @@ export class ElectronService {
       this.childProcess = window.require('child_process');
       this.fs = window.require('fs');
       this.base64Img = window.require('base64-img');
+      this.sharp = window.require('sharp');
     }
   }
 }
