@@ -16,7 +16,7 @@ export class SpectrometerService {
   measureImage(filePath) {
     this.sharp(filePath).stats((err, stats) => { 
       if (err) return console.log(err, stats)
-      const channelsMean = stats.channels.reduce((acc, channel)=>{ acc += channel.mean; return acc;},0);
+      const channelsMean = stats.channels.reduce((acc, channel)=>{ acc += channel.mean; return acc;},0)/3;
       console.log(channelsMean);
     });
   }
