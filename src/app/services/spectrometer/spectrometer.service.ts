@@ -1,13 +1,23 @@
 import { Injectable } from '@angular/core';
-import { WebcamImage } from "ngx-webcam";
+import { ElectronService } from "../electron/electron.service";
+
 @Injectable({
   providedIn: 'root'
 })
 export class SpectrometerService {
+  private sharp: any
 
-  constructor() { }
+  constructor(
+    public electronService: ElectronService,
+  ) { 
+    this.sharp = electronService.sharp;
+  }
 
-  measureImage(picture: WebcamImage) {
-    // https://github.com/lovell/sharp/blob/e0fa15f5cb8896e39c25d51d3370380892bacb50/test/unit/stats.js
+  measureImage(filePath) {
+    this.sharp(filePath).stats((err, stats) => { 
+      if (err) return console.log(err, stats)
+      const channelsMean = stats.channels.reduce((acc, channel)=>{ acc += channel.mean; return acc;},0);
+      console.log(channelsMean);
+    });
   }
 }

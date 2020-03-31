@@ -92,8 +92,7 @@ export class SessionService {
   }
 
   private processPicture = (picture: WebcamImage) => {
-    debugger;
-    const { base64Img, sharp } = this.electronService;
+    const { base64Img } = this.electronService;
     const pictureTimestamp = Math.round(new Date().getTime() / 1000);
     const saveDir = `${
       process.env[process.platform == "win32" ? "USERPROFILE" : "HOME"]
@@ -103,12 +102,12 @@ export class SessionService {
     console.log("savedir: ", saveDir);
     if (this.decellularizationStatus === INCOMPLETE) {
       console.log(INCOMPLETE, picture);
-      debugger;
-      base64Img.img(picture.imageAsDataUrl, saveDir, pictureTimestamp, function(
+      base64Img.img(picture.imageAsDataUrl, saveDir, pictureTimestamp, (
         err,
         filepath
-      ) {
+      ) => {
         console.log(err, filepath);
+        this.spectrometerService.measureImage(filepath);
       });
     } else if (this.decellularizationStatus === COMPLETE) {
       console.log(COMPLETE, picture);
