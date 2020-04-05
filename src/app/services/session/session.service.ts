@@ -47,7 +47,7 @@ export class SessionService {
     // serialportService.init();
     
     cameraService.pictureObservable.subscribe(this.processPicture);
-
+    spectrometerService.metricObservable.subscribe(this.processMetric)
      setTimeout(
         () => {
           cameraService.triggerSnapshot();
@@ -61,6 +61,10 @@ export class SessionService {
     // );
 
     return SessionService.instance;
+  }
+
+  private processMetric = (data : number) => {
+    
   }
 
   private processConfirmation = (data: string) => {
