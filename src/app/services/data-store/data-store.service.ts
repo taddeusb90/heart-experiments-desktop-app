@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { Database } from "sqlite3";
+// import { Database } from "sqlite3";
 import { open } from "sqlite";
 import { WORK_FOLDER } from "../../constants/file-system";
 
@@ -9,6 +9,7 @@ import { WORK_FOLDER } from "../../constants/file-system";
 export class DataStoreService {
   static instance: DataStoreService;
   public sqlite: any;
+  public sqlite3: any;
   private db: any;
   public rows: Array<any>;
 
@@ -17,10 +18,11 @@ export class DataStoreService {
       DataStoreService.instance = this;
     }
     this.sqlite = window.require("sqlite");
+    this.sqlite3 = window.require('sqlite3').verbose();
     this.db = this.sqlite
       .open({
         filename: `${WORK_FOLDER}/heart-experiments.db`,
-        driver: Database,
+        driver: this.sqlite3.Database,
       })
       .then((db) => {
         db.exec(
