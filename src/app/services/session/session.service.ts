@@ -4,7 +4,7 @@ import {
   STARTED,
   NOT_STARTED,
   PAUSED,
-  ENDED
+  ENDED,
 } from "../../constants/session-statuses";
 import {
   BEGIN,
@@ -12,21 +12,23 @@ import {
   RESET,
   PAUSE,
   END,
-  HOME
+  HOME,
 } from "../../constants/messages";
+import { WORK_FOLDER } from "../../constants/file-system";
 import {
   COMPLETE,
-  INCOMPLETE
+  INCOMPLETE,
 } from "../../constants/decellularization-statuses";
 import { ElectronService } from "../electron/electron.service";
 import { CameraService } from "../camera/camera.service";
 import { SpectrometerService } from "../spectrometer/spectrometer.service";
 import { WebcamImage } from "ngx-webcam";
+import { DataStoreService } from "../data-store/data-store.service";
 
 const WAIT_BETWEEN_PHOTOS = 1000;
 
 @Injectable({
-  providedIn: "root"
+  providedIn: "root",
 })
 export class SessionService {
   static instance: SessionService;
@@ -37,7 +39,8 @@ export class SessionService {
     public serialportService: SerialportService,
     public electronService: ElectronService,
     public cameraService: CameraService,
-    public spectrometerService: SpectrometerService
+    public spectrometerService: SpectrometerService,
+    public dataStoreService: DataStoreService
   ) {
     if (!SessionService.instance) {
       SessionService.instance = this;
@@ -45,13 +48,12 @@ export class SessionService {
     SessionService.instance.sessionStatus = NOT_STARTED;
     SessionService.instance.decellularizationStatus = INCOMPLETE;
     // serialportService.init();
-    
+
     cameraService.pictureObservable.subscribe(this.processPicture);
-    spectrometerService.metricObservable.subscribe(this.processMetric)
-     setTimeout(
-        () => {
-          cameraService.triggerSnapshot();
-        }, 2000);
+    spectrometerService.metricObservable.subscribe(this.processMetric);
+    setTimeout(() => {
+      cameraService.triggerSnapshot();
+    }, 2000);
     // setTimeout(
     //   () =>
     //     serialportService.confirmationObservable.subscribe(
@@ -63,9 +65,7 @@ export class SessionService {
     return SessionService.instance;
   }
 
-  private processMetric = (data : number) => {
-    
-  }
+  private processMetric = (data: number) => {};
 
   private processConfirmation = (data: string) => {
     console.log(`confirmation> ${data}`);
@@ -93,114 +93,115 @@ export class SessionService {
       default:
         break;
     }
-  }
+  };
 
   private processPicture = (picture: WebcamImage) => {
     const { base64Img } = this.electronService;
     const pictureTimestamp = Math.round(new Date().getTime() / 1000);
-    const saveDir = `${
-      process.env[process.platform == "win32" ? "USERPROFILE" : "HOME"]
-    }/Documents/heart-experiments/sessions/${
+    const saveDir = `${WORK_FOLDER}/sessions/${
       this.sessionTimestamp
     }/${this.decellularizationStatus.toLocaleLowerCase()}`;
     console.log("savedir: ", saveDir);
     if (this.decellularizationStatus === INCOMPLETE) {
       console.log(INCOMPLETE, picture);
-      base64Img.img(picture.imageAsDataUrl, saveDir, pictureTimestamp, (
-        err,
-        filepath
-      ) => {
-        console.log(err, filepath);
-        this.spectrometerService.measureImage(filepath);
-      });
+      base64Img.img(
+        picture.imageAsDataUrl,
+        saveDir,
+        pictureTimestamp,
+        (err, filepath) => {
+          console.log(err, filepath);
+          this.spectrometerService.measureImage(filepath);
+        }
+      );
     } else if (this.decellularizationStatus === COMPLETE) {
       console.log(COMPLETE, picture);
-      base64Img.img(picture.imageAsDataUrl, saveDir, pictureTimestamp, function(
-        err,
-        filepath
-      ) {
-        console.log(err, filepath);
-      });
+      base64Img.img(
+        picture.imageAsDataUrl,
+        saveDir,
+        pictureTimestamp,
+        function (err, filepath) {
+          console.log(err, filepath);
+        }
+      );
     } else {
-      console.error('Problems saving picture', picture);
+      console.error("Problems saving picture", picture);
     }
-  }
+  };
 
   public setDecellularizationStatus = (status: string): void => {
     this.decellularizationStatus = status;
-  }
-  public shouldDisplayBeginButton = (): boolean => 
+  };
+  public shouldDisplayBeginButton = (): boolean =>
     [NOT_STARTED, ENDED].includes(this.sessionStatus);
-  
-  public shouldDisplayContinueButton = (): boolean => 
+
+  public shouldDisplayContinueButton = (): boolean =>
     [STARTED, PAUSED].includes(this.sessionStatus);
-  
-  public shouldEnableContinueButton = (): boolean => 
+
+  public shouldEnableContinueButton = (): boolean =>
     [PAUSED].includes(this.sessionStatus);
 
-  public shouldEnablePauseButton = (): boolean => 
+  public shouldEnablePauseButton = (): boolean =>
     [STARTED].includes(this.sessionStatus);
-  
-  public shouldEnableEndButton = (): boolean => 
-    [STARTED, PAUSED].includes(this.sessionStatus);
-  
-  public shouldEnableResetButton = (): boolean => 
+
+  public shouldEnableEndButton = (): boolean =>
     [STARTED, PAUSED].includes(this.sessionStatus);
 
-  public startSession = () : void => {
+  public shouldEnableResetButton = (): boolean =>
+    [STARTED, PAUSED].includes(this.sessionStatus);
+
+  public startSession = (): void => {
     this.sessionStatus = STARTED;
     this.doStart();
-  }
+  };
 
   public continueSession = (): void => {
     this.sessionStatus = STARTED;
     this.doContinue();
-  }
+  };
 
   public pauseSession = (): void => {
     this.sessionStatus = PAUSED;
     this.doPause();
-  }
+  };
 
   public endSession = (): void => {
     this.sessionStatus = ENDED;
     this.doEnd();
-  }
+  };
 
   public resetMotorPosition = (): void => {
     this.sessionStatus = PAUSED;
     this.serialportService.sendMessageToBoard(RESET);
-  }
+  };
 
   public hardResetMotorPosition = (): void => {
     this.sessionStatus = PAUSED;
-    this.sessionTimestamp = Math.round((new Date()).getTime() / 1000);
+    this.sessionTimestamp = Math.round(new Date().getTime() / 1000);
     this.serialportService.sendMessageToBoard(HOME);
-  }
+  };
 
   private doStart = (): void => {
     if (this.sessionStatus === STARTED) {
-      this.sessionTimestamp = Math.round((new Date()).getTime() / 1000);
+      this.sessionTimestamp = Math.round(new Date().getTime() / 1000);
       this.serialportService.sendMessageToBoard(BEGIN);
     }
-  }
+  };
 
   private doContinue = (): void => {
     if (this.sessionStatus === STARTED) {
       this.serialportService.sendMessageToBoard(CONTINUE);
-    } 
-  }
+    }
+  };
 
-  private doPause = (): void => {  
+  private doPause = (): void => {
     if (this.sessionStatus === PAUSED) {
       this.serialportService.sendMessageToBoard(PAUSE);
     }
-  }
+  };
 
-  private doEnd = (): void => {  
-    if (this.sessionStatus === ENDED) { 
+  private doEnd = (): void => {
+    if (this.sessionStatus === ENDED) {
       this.serialportService.sendMessageToBoard(END);
     }
-  }
-
+  };
 }

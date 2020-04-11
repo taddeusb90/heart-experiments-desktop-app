@@ -24,7 +24,10 @@
               "src/favicon.256x256.png",
               "src/favicon.512x512.png"
             ],
-            "styles": ["src/styles.scss", "src/theme.scss"],
+            "styles": [
+              "src/styles.scss",
+              "src/theme.scss"
+            ],
             "scripts": [],
             "customWebpackConfig": {
               "path": "./angular.webpack.js"
@@ -115,7 +118,9 @@
             "tsConfig": "src/tsconfig.spec.json",
             "karmaConfig": "src/karma.conf.js",
             "scripts": [],
-            "styles": ["src/styles.scss"],
+            "styles": [
+              "src/styles.scss"
+            ],
             "assets": [
               "src/assets",
               "src/favicon.ico",
@@ -134,8 +139,13 @@
           "builder": "@angular-eslint/builder:lint",
           "options": {
             "eslintConfig": "src/eslintrc.config.json",
-            "tsConfig": ["src/tsconfig.app.json", "src/tsconfig.spec.json"],
-            "exclude": ["**/node_modules/**"]
+            "tsConfig": [
+              "src/tsconfig.app.json",
+              "src/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
           }
         }
       }
@@ -148,8 +158,12 @@
           "builder": "@angular-eslint/builder:lint",
           "options": {
             "eslintConfig": "e2e/eslintrc.e2e.json",
-            "tsConfig": ["e2e/tsconfig.e2e.json"],
-            "exclude": ["**/node_modules/**"]
+            "tsConfig": [
+              "e2e/tsconfig.e2e.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
           }
         }
       }
@@ -164,5 +178,8 @@
     "@schematics/angular:directive": {
       "prefix": "app"
     }
+  },
+  "cli": {
+    "analytics": false
   }
 }

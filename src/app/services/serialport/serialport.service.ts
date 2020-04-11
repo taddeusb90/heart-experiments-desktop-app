@@ -1,15 +1,14 @@
 import { Injectable } from "@angular/core";
 import * as SerialPort from "serialport";
-import { Subject, Observable } from 'rxjs';
-
+import { Subject, Observable } from "rxjs";
 
 @Injectable({
-  providedIn: "root"
+  providedIn: "root",
 })
 export class SerialportService {
   static instance: SerialportService;
   public serialPort: typeof SerialPort;
-  public arduinoSerialPortDetails: any; 
+  public arduinoSerialPortDetails: any;
   public arduinoSerialPort: any;
   public port: any;
   public parser: any;
@@ -25,18 +24,20 @@ export class SerialportService {
   }
 
   public init(): void {
-    const { parsers: { Readline } } = this.serialPort;
+    const {
+      parsers: { Readline },
+    } = this.serialPort;
     const serialPort = this.serialPort;
     this.serialPort
       .list()
       .then((ports: any) => {
         console.log("all ports", ports);
         this.arduinoSerialPortDetails = ports.filter(
-          port => port.manufacturer && port.vendorId.indexOf("2341") > -1
+          (port) => port.manufacturer && port.vendorId.indexOf("2341") > -1
         )[0];
         console.log("arduport", this.arduinoSerialPortDetails);
         this.port = new serialPort(this.arduinoSerialPortDetails.comName, {
-          baudRate: 9600
+          baudRate: 9600,
         });
         setTimeout(() => this.port.write(`INIT\r\n`), 500);
         this.parser = this.port.pipe(new Readline({ delimiter: "\r\n" }));
@@ -50,11 +51,10 @@ export class SerialportService {
   }
 
   private getConfirmation = (line: string): void => {
-    this.confirmationSubject.next(line)
-  } 
+    this.confirmationSubject.next(line);
+  };
 
   public sendMessageToBoard(message): void {
     this.port.write(`${message}\r\n`);
   }
-
 }
