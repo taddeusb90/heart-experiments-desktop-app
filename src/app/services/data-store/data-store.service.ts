@@ -25,11 +25,14 @@ export class DataStoreService {
         driver: this.sqlite3.Database,
       })
       .then((db) => {
+        // db.exec(
+        //   "CREATE DATABASE IF NOT EXISTS heart_experiments;"
+        // );
         db.exec(
-          "CREATE TABLE IF NOT EXISTS [heart_experiments].sessions (id INTEGER PRIMARY KEY, session INTEGER NOT NULL, created_at DATE NOT NULL);"
+          "CREATE TABLE IF NOT EXISTS sessions (id INTEGER PRIMARY KEY, session INTEGER NOT NULL, created_at DATE NOT NULL);"
         );
         db.exec(
-          "CREATE TABLE IF NOT EXISTS [heart_experiments].session_info (id INTEGER PRIMARY KEY, session_id INTEGER NOT NULL, created_at DATE NOT NULL, image_location TEXT NOT NULL, spectro_metric REAL NOT NULL, type TEXT NOT NULL);"
+          "CREATE TABLE IF NOT EXISTS session_info (id INTEGER PRIMARY KEY, session_id INTEGER NOT NULL, created_at DATE NOT NULL, image_location TEXT NOT NULL, spectro_metric REAL NOT NULL, type TEXT NOT NULL);"
         );
       });
     // new this.sqlite3.Database(`${WORK_FOLDER}/heart-experiments.db`);
@@ -49,7 +52,7 @@ export class DataStoreService {
   public insertSession(sessionValue: any): Promise<any> {
     const { session, created_at } = sessionValue;
     return this.db.run(
-      "INSERT INTO  [heart_experiments].sessions(session, created_at) VALUES (:session, :created_at)",
+      "INSERT INTO sessions(session, created_at) VALUES (:session, :created_at)",
       { ":session": session, ":created_at": created_at }
     );
 
@@ -70,7 +73,7 @@ export class DataStoreService {
       type,
     } = sessionInfo;
     return this.db.run(
-      "INSERT INTO [heart_experiments].session_info(session_id, created_at, image_location, spectro_metric, type) VALUES (:session_id, :created_at, :image_location, :spectro_metric, :type);",
+      "INSERT INTO session_info(session_id, created_at, image_location, spectro_metric, type) VALUES (:session_id, :created_at, :image_location, :spectro_metric, :type);",
       {
         ":session_id": sessionId,
         ":created_at": createdAt,
