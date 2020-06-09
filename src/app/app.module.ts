@@ -5,9 +5,9 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
-import { AppRoutingModule } from './app-routing.module';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { AppRoutingModule } from './app-routing.module';
 import { SessionModule } from './pages/session/session.module';
 import { AppComponent } from './app.component';
 import { WebviewDirective } from './directives/webview/webview.directive';
@@ -30,13 +30,13 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
       loader: {
         provide: TranslateLoader,
         useFactory: HttpLoaderFactory,
-        deps: [HttpClient]
-      }
+        deps: [HttpClient],
+      },
     }),
   ],
   exports: [MaterialModule],
   providers: [],
   bootstrap: [AppComponent],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class AppModule {}

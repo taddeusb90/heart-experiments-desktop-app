@@ -1,8 +1,8 @@
 import { Component, HostBinding } from '@angular/core';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { ElectronService } from './services/electron/electron.service';
 import { TranslateService } from '@ngx-translate/core';
 import { AppConfig } from '../environments/environment';
+import { ElectronService } from './services/electron/electron.service';
 
 @Component({
   selector: 'app-root',

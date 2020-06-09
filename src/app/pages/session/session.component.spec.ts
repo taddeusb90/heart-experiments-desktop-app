@@ -1,16 +1,15 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SessionComponent } from './session.component';
 import { TranslateModule } from '@ngx-translate/core';
+import { SessionComponent } from './session.component';
 
 describe('SessionComponent', () => {
-  let component: SessionComponent;
-  let fixture: ComponentFixture<SessionComponent>;
+  let component: SessionComponent, fixture: ComponentFixture<SessionComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [SessionComponent],
-      imports: [TranslateModule.forRoot()]
+      imports: [TranslateModule.forRoot()],
     }).compileComponents();
   }));
 

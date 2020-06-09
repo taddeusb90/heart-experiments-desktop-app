@@ -40,7 +40,7 @@ export class CameraService {
   }
 
   public triggerSnapshot(): void {
-    this.trigger.next()
+    this.trigger.next();
   }
 
   public toggleWebcam(): void {

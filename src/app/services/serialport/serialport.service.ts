@@ -1,9 +1,9 @@
-import { Injectable } from "@angular/core";
-import * as SerialPort from "serialport";
-import { Subject, Observable } from "rxjs";
+import { Injectable } from '@angular/core';
+import * as SerialPort from 'serialport';
+import { Subject, Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root',
 })
 export class SerialportService {
   static instance: SerialportService;
@@ -19,29 +19,29 @@ export class SerialportService {
     if (!SerialportService.instance) {
       SerialportService.instance = this;
     }
-    this.serialPort = window.require("serialport");
+    this.serialPort = window.require('serialport');
     return SerialportService.instance;
   }
 
   public init(): void {
     const {
       parsers: { Readline },
-    } = this.serialPort;
-    const serialPort = this.serialPort;
+    } = this.serialPort,
+     {serialPort} = this;
     this.serialPort
       .list()
       .then((ports: any) => {
-        console.log("all ports", ports);
+        console.log('all ports', ports);
         this.arduinoSerialPortDetails = ports.filter(
-          (port) => port.manufacturer && port.vendorId.indexOf("2341") > -1
+          (port) => port.manufacturer && port.vendorId.indexOf('2341') > -1
         )[0];
-        console.log("arduport", this.arduinoSerialPortDetails);
+        console.log('arduport', this.arduinoSerialPortDetails);
         this.port = new serialPort(this.arduinoSerialPortDetails.comName, {
           baudRate: 9600,
         });
-        setTimeout(() => this.port.write(`INIT\r\n`), 500);
-        this.parser = this.port.pipe(new Readline({ delimiter: "\r\n" }));
-        this.parser.on("data", this.getConfirmation);
+        setTimeout(() => this.port.write('INIT\r\n'), 500);
+        this.parser = this.port.pipe(new Readline({ delimiter: '\r\n' }));
+        this.parser.on('data', this.getConfirmation);
 
         this.confirmationObservable = this.confirmationSubject.asObservable();
       })

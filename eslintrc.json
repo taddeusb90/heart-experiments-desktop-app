@@ -1,24 +1,93 @@
 {
-    "env": {
-        "browser": true,
-        "node": true,
-        "es6": true,
-        "es2017": true
-    },
-    "extends": [
-        "eslint:recommended",
-        "plugin:@typescript-eslint/eslint-recommended",
-        "plugin:@typescript-eslint/recommended",
-        "plugin:@typescript-eslint/recommended-requiring-type-checking"
+  "env": {
+    "browser": true,
+    "node": true,
+    "es6": true,
+    "es2017": true
+  },
+  "extends": [
+    "plugin:prettier/recommended",
+    "prettier/@typescript-eslint",
+    "eslint:recommended"
+  ],
+  "parserOptions": {
+    "tsconfigRootDir": ".",
+    "ecmaVersion": 2018,
+    "sourceType": "module"
+  },
+  "globals": {
+    "Atomics": "readonly",
+    "SharedArrayBuffer": "readonly"
+  },
+  "parser": "@typescript-eslint/parser",
+
+  "plugins": ["@typescript-eslint", "prettier", "import"],
+  "rules": {
+    "quotes": ["error", "single", { "avoidEscape": true }],
+    "camelcase": "error",
+    "semi": ["error", "always"],
+    "prefer-destructuring": "error",
+    "no-else-return": "error",
+    "no-nested-ternary": "error",
+    "no-restricted-globals": "off",
+    "no-shadow": "error",
+    "no-unused-expressions": "error",
+    "prefer-promise-reject-errors": "error",
+    "linebreak-style": ["error", "unix"],
+    "no-param-reassign": ["error", { "props": true }],
+    "one-var": "error",
+    "array-callback-return": "error",
+    "no-bitwise": "error",
+    "no-return-assign": "error",
+
+    "guard-for-in": "warn",
+    "no-restricted-syntax": "warn",
+    "consistent-return": "warn",
+    "no-console": ["warn"],
+    "no-debugger": ["warn"],
+
+    "no-unused-vars": "off", // turned off covered better @typescript-eslint
+    "no-use-before-define": "off", // turned off covered better @typescript-eslint
+
+    "global-require": "error", // deprecated in v7
+    "no-buffer-constructor": "error", // deprecated in v7
+    "no-process-exit": "error", // deprecated in v7
+
+    "prettier/prettier": ["error", { "singleQuote": true, "parser": "flow" }],
+
+    "@typescript-eslint/no-unused-vars": "error",
+    "@typescript-eslint/no-use-before-define": ["error", { "typedefs": false }],
+    "@typescript-eslint/explicit-member-accessibility": "off",
+    "@typescript-eslint/explicit-function-return-type": "error",
+
+    "import/no-self-import": "error",
+    "import/order": "error",
+    "import/no-cycle": "error",
+    "import/extensions": [
+      "error",
+      "ignorePackages",
+      {
+        "ts": "never",
+        "js": "never"
+      }
     ],
-    "parser": "@typescript-eslint/parser",
-    "parserOptions": {
-        "tsconfigRootDir": "."
+    "import/no-unresolved": ["error", { "caseSensitive": true }],
+    "import/no-extraneous-dependencies": ["error"]
+  },
+  "settings": {
+    "typescript": {
+      "alwaysTryTypes": true
     },
-    "plugins": ["@typescript-eslint"],
-    "rules": {
-      "@typescript-eslint/no-empty-function": 0,
-      "@typescript-eslint/no-var-requires": 0,
-      "@typescript-eslint/no-explicit-any": 0
+    "import/parsers": {
+      "@typescript-eslint/parser": [".ts"]
+    },
+    "import/resolver": {
+      "typescript": {
+        "directory": "./"
+      },
+      "node": {
+        "extensions": [".js", ".ts"]
+      }
     }
+  }
 }

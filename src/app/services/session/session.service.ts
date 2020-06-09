@@ -1,11 +1,14 @@
-import { Injectable } from "@angular/core";
-import { SerialportService } from "../serialport/serialport.service";
+import { Injectable } from '@angular/core';
+import { forkJoin } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { WebcamImage } from 'ngx-webcam';
+import { SerialportService } from '../serialport/serialport.service';
 import {
   STARTED,
   NOT_STARTED,
   PAUSED,
   ENDED,
-} from "../../constants/session-statuses";
+} from '../../constants/session-statuses';
 import {
   BEGIN,
   CONTINUE,
@@ -13,28 +16,28 @@ import {
   PAUSE,
   END,
   HOME,
-} from "../../constants/messages";
-import { WORK_FOLDER } from "../../constants/file-system";
+} from '../../constants/messages';
+import { WORK_FOLDER } from '../../constants/file-system';
 import {
   COMPLETE,
   INCOMPLETE,
-} from "../../constants/decellularization-statuses";
-import { ElectronService } from "../electron/electron.service";
-import { CameraService } from "../camera/camera.service";
-import { SpectrometerService } from "../spectrometer/spectrometer.service";
-import { WebcamImage } from "ngx-webcam";
-import { DataStoreService } from "../data-store/data-store.service";
+} from '../../constants/decellularization-statuses';
+import { ElectronService } from '../electron/electron.service';
+import { CameraService } from '../camera/camera.service';
+import { SpectrometerService } from '../spectrometer/spectrometer.service';
+import { DataStoreService } from '../data-store/data-store.service';
 
 const WAIT_BETWEEN_PHOTOS = 1000;
 
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root',
 })
 export class SessionService {
   static instance: SessionService;
   public sessionStatus: string;
   public decellularizationStatus: string;
   public sessionTimestamp: number;
+  public sessionID: number;
   constructor(
     public serialportService: SerialportService,
     public electronService: ElectronService,
@@ -49,10 +52,25 @@ export class SessionService {
     SessionService.instance.decellularizationStatus = INCOMPLETE;
     // serialportService.init();
 
-    cameraService.pictureObservable.subscribe(this.processPicture);
-    spectrometerService.metricObservable.subscribe(this.processMetric);
+    cameraService.pictureObservable.subscribe(async (picture) => {
+      if (!this.sessionTimestamp) return;
+      const filePath = await this.processPicture(picture),
+       metric = await this.spectrometerService.measureImage(filePath),
+       sessionInfo = {
+        sessionId: this.sessionID,
+        createdAt: new Date(),
+        imageLocation: filePath,
+        spectroMetric: metric,
+        type: this.decellularizationStatus,
+      };
+      this.dataStoreService.insertSessionInfo(sessionInfo);
+    });
+       
+        
+
     setTimeout(() => {
       cameraService.triggerSnapshot();
+      this.doContinue();
     }, 2000);
     // setTimeout(
     //   () =>
@@ -65,7 +83,6 @@ export class SessionService {
     return SessionService.instance;
   }
 
-  private processMetric = (data: number) => {};
 
   private processConfirmation = (data: string) => {
     console.log(`confirmation> ${data}`);
@@ -95,37 +112,27 @@ export class SessionService {
     }
   };
 
-  private processPicture = (picture: WebcamImage) => {
-    const { base64Img } = this.electronService;
-    const pictureTimestamp = Math.round(new Date().getTime() / 1000);
-    const saveDir = `${WORK_FOLDER}/sessions/${
+  private processPicture = (picture: WebcamImage): Promise<string> => {
+    const { base64Img } = this.electronService,
+     pictureTimestamp = Math.round(new Date().getTime() / 1000),
+     saveDir = `${WORK_FOLDER}/sessions/${
       this.sessionTimestamp
     }/${this.decellularizationStatus.toLocaleLowerCase()}`;
-    console.log("savedir: ", saveDir);
-    if (this.decellularizationStatus === INCOMPLETE) {
-      console.log(INCOMPLETE, picture);
+    
+    return new Promise((resolve, reject) => {
       base64Img.img(
         picture.imageAsDataUrl,
         saveDir,
         pictureTimestamp,
-        (err, filepath) => {
-          console.log(err, filepath);
-          this.spectrometerService.measureImage(filepath);
+        (err, filePath) => {
+          if (err) {
+            reject(err);
+          }
+  
+          resolve(filePath);
         }
       );
-    } else if (this.decellularizationStatus === COMPLETE) {
-      console.log(COMPLETE, picture);
-      base64Img.img(
-        picture.imageAsDataUrl,
-        saveDir,
-        pictureTimestamp,
-        function (err, filepath) {
-          console.log(err, filepath);
-        }
-      );
-    } else {
-      console.error("Problems saving picture", picture);
-    }
+    });
   };
 
   public setDecellularizationStatus = (status: string): void => {
@@ -180,28 +187,39 @@ export class SessionService {
     this.serialportService.sendMessageToBoard(HOME);
   };
 
-  private doStart = (): void => {
+  private doStart = async (): Promise<void> => {
     if (this.sessionStatus === STARTED) {
-      this.sessionTimestamp = Math.round(new Date().getTime() / 1000);
-      this.serialportService.sendMessageToBoard(BEGIN);
+      const date = new Date(),
+       timestamp = Math.round(date.getTime() / 1000);
+      this.sessionTimestamp = timestamp;
+      this.sessionID = await this.dataStoreService.insertSession({ session: timestamp,  createdAt: date});
+      setTimeout(() => {
+        this.cameraService.triggerSnapshot();
+        this.doContinue();
+      }, WAIT_BETWEEN_PHOTOS);
+      // this.serialportService.sendMessageToBoard(BEGIN);
     }
   };
 
   private doContinue = (): void => {
     if (this.sessionStatus === STARTED) {
-      this.serialportService.sendMessageToBoard(CONTINUE);
+      setTimeout(() => {
+        this.cameraService.triggerSnapshot();
+        this.doContinue();
+      }, WAIT_BETWEEN_PHOTOS);
+      // this.serialportService.sendMessageToBoard(CONTINUE);
     }
   };
 
   private doPause = (): void => {
     if (this.sessionStatus === PAUSED) {
-      this.serialportService.sendMessageToBoard(PAUSE);
+      // this.serialportService.sendMessageToBoard(PAUSE);
     }
   };
 
   private doEnd = (): void => {
     if (this.sessionStatus === ENDED) {
-      this.serialportService.sendMessageToBoard(END);
+      // this.serialportService.sendMessageToBoard(END);
     }
   };
 }
