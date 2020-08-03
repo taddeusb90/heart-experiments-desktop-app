@@ -10,12 +10,7 @@ import { SessionComponent } from './session.component';
 import { SessionRoutingModule } from './session-routing.module';
 
 @NgModule({
-  declarations: [
-    SessionComponent,
-    CameraComponent,
-    SessionControlsComponent,
-    LineChartComponent,
-  ],
+  declarations: [SessionComponent, CameraComponent, SessionControlsComponent, LineChartComponent],
   imports: [CommonModule, SessionRoutingModule, WebcamModule, MaterialModule],
 })
 export class SessionModule {}

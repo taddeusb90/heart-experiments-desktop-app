@@ -26,48 +26,46 @@ export class DataStoreService {
       })
       .then((db) => {
         db.exec(
-          'CREATE TABLE IF NOT EXISTS sessions (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, session INTEGER NOT NULL, created_at DATE NOT NULL);'
+          'CREATE TABLE IF NOT EXISTS sessions (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, session INTEGER NOT NULL, created_at DATE NOT NULL);',
         );
         db.exec(
-          'CREATE TABLE IF NOT EXISTS session_info (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, session_id INTEGER NOT NULL, created_at DATE NOT NULL, image_location TEXT NOT NULL, spectro_metric REAL NOT NULL, type TEXT NOT NULL);'
+          'CREATE TABLE IF NOT EXISTS session_info (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, session_id INTEGER NOT NULL, created_at DATE NOT NULL, image_location TEXT NOT NULL, spectro_metric REAL NOT NULL, type TEXT NOT NULL);',
         );
         this.db = db;
       });
-    
+
     return DataStoreService.instance;
   }
 
   public insertSession = async (sessionValue: Session): Promise<number> => {
     const { session, createdAt } = sessionValue,
-     { lastID }  = await this.db.run(
-      'INSERT INTO sessions(session, created_at) VALUES (?, ?);', [session, moment(createdAt).format('YYYY-MM-DD HH:MM:SS')]
-    );
+      { lastID } = await this.db.run('INSERT INTO sessions(session, created_at) VALUES (?, ?);', [
+        session,
+        moment(createdAt).format('YYYY-MM-DD HH:MM:SS'),
+      ]);
 
     return lastID;
-  }
+  };
 
   public insertSessionInfo = async (sessionInfo: SessionInfo): Promise<any> => {
-    const {
-      sessionId,
-      createdAt,
-      imageLocation,
-      spectroMetric,
-      type,
-    } = sessionInfo;
+    const { sessionId, createdAt, imageLocation, spectroMetric, type } = sessionInfo;
     await this.db.run(
-      'INSERT INTO session_info(session_id, created_at, image_location, spectro_metric, type) VALUES (?, ?, ?, ?, ?);', [sessionId, moment(createdAt).format('YYYY-MM-DD HH:MM:SS'), imageLocation, spectroMetric, type]  
+      'INSERT INTO session_info(session_id, created_at, image_location, spectro_metric, type) VALUES (?, ?, ?, ?, ?);',
+      [
+        sessionId,
+        moment(createdAt).format('YYYY-MM-DD HH:MM:SS'),
+        imageLocation,
+        spectroMetric,
+        type,
+      ],
     );
-  }
+  };
 
   public getAllSessions(): any {
-      return this.db.run('SELECT * FROM sessions');
+    return this.db.run('SELECT * FROM sessions');
   }
 
   public getAllSessionInfo(sessionId): any {
-
-      return this.db.run(
-        'SELECT * FROM session_info where session_id = ?',
-        [sessionId]
-      );
+    return this.db.run('SELECT * FROM session_info where session_id = ?', [sessionId]);
   }
 }

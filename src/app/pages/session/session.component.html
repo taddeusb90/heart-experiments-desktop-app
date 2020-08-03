@@ -1,5 +1,6 @@
 <div class="session-container">
 	<app-camera (pictureTaken)="handleImage($event)"></app-camera>
+	<app-line-chart [data]="dataPoints" [metric]="metric"></app-line-chart>
 	<app-session-controls></app-session-controls>
 	<div class="snapshot" *ngIf="webcamImage">
 		<img [src]="webcamImage.imageAsDataUrl" />

@@ -35,7 +35,7 @@ function createWindow(): BrowserWindow {
         pathname: path.join(__dirname, 'dist/index.html'),
         protocol: 'file:',
         slashes: true,
-      })
+      }),
     );
   }
   win.webContents.openDevTools();

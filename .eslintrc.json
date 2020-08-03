@@ -6,9 +6,10 @@
     "es2017": true
   },
   "extends": [
-    "plugin:prettier/recommended",
+    "prettier",
     "prettier/@typescript-eslint",
-    "eslint:recommended"
+    "plugin:@typescript-eslint/recommended",
+    "plugin:prettier/recommended"
   ],
   "parserOptions": {
     "tsconfigRootDir": ".",
@@ -21,11 +22,10 @@
   },
   "parser": "@typescript-eslint/parser",
 
-  "plugins": ["@typescript-eslint", "prettier", "import"],
+  "plugins": ["import", "prettier", "@typescript-eslint"],
   "rules": {
     "quotes": ["error", "single", { "avoidEscape": true }],
     "camelcase": "error",
-    "semi": ["error", "always"],
     "prefer-destructuring": "error",
     "no-else-return": "error",
     "no-nested-ternary": "error",
@@ -53,12 +53,19 @@
     "no-buffer-constructor": "error", // deprecated in v7
     "no-process-exit": "error", // deprecated in v7
 
-    "prettier/prettier": ["error", { "singleQuote": true, "parser": "flow" }],
+    "prettier/prettier": [
+      "error",
+      {},
+      {
+        "usePrettierrc": true
+      }
+    ],
 
     "@typescript-eslint/no-unused-vars": "error",
     "@typescript-eslint/no-use-before-define": ["error", { "typedefs": false }],
     "@typescript-eslint/explicit-member-accessibility": "off",
     "@typescript-eslint/explicit-function-return-type": "error",
+    "@typescript-eslint/interface-name-prefix": "off",
 
     "import/no-self-import": "error",
     "import/order": "error",
@@ -74,6 +81,7 @@
     "import/no-unresolved": ["error", { "caseSensitive": true }],
     "import/no-extraneous-dependencies": ["error"]
   },
+  "ignorePatterns": ["src/**/*.test.ts", "*.d.ts"],
   "settings": {
     "typescript": {
       "alwaysTryTypes": true

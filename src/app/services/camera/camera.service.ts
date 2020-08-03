@@ -3,7 +3,7 @@ import { Subject, Observable } from 'rxjs';
 import { WebcamImage, WebcamInitError, WebcamUtil } from 'ngx-webcam';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CameraService {
   static instance: CameraService;
@@ -11,31 +11,30 @@ export class CameraService {
   public allowCameraSwitch = true;
   public multipleWebcamsAvailable = false;
   public deviceId: string;
-  public imageQuality: number = 1;
+  public imageQuality = 1;
   public videoOptions: MediaTrackConstraints = {
     width: 1280,
     height: 720,
     frameRate: {
       ideal: 60,
-      min: 10
-    }
+      min: 10,
+    },
   };
   public errors: WebcamInitError[] = [];
-  
-  public picture: Subject<WebcamImage>  = new Subject<WebcamImage>();
-  private trigger: Subject<void> = new Subject<void>();
-  private nextWebcam: Subject<boolean|string> = new Subject<boolean|string>();
 
-  constructor() { 
+  public picture: Subject<WebcamImage> = new Subject<WebcamImage>();
+  private trigger: Subject<void> = new Subject<void>();
+  private nextWebcam: Subject<boolean | string> = new Subject<boolean | string>();
+
+  constructor() {
     if (!CameraService.instance) {
       CameraService.instance = this;
     }
 
-    WebcamUtil.getAvailableVideoInputs()
-    .then((mediaDevices: MediaDeviceInfo[]) => {
+    WebcamUtil.getAvailableVideoInputs().then((mediaDevices: MediaDeviceInfo[]) => {
       this.multipleWebcamsAvailable = mediaDevices && mediaDevices.length > 1;
     });
-    
+
     return CameraService.instance;
   }
 
@@ -51,7 +50,7 @@ export class CameraService {
     this.errors.push(error);
   }
 
-  public showNextWebcam(directionOrDeviceId: boolean|string): void {
+  public showNextWebcam(directionOrDeviceId: boolean | string): void {
     this.nextWebcam.next(directionOrDeviceId);
   }
 
@@ -72,7 +71,7 @@ export class CameraService {
     return this.trigger.asObservable();
   }
 
-  public get nextWebcamObservable(): Observable<boolean|string> {
+  public get nextWebcamObservable(): Observable<boolean | string> {
     return this.nextWebcam.asObservable();
   }
 }

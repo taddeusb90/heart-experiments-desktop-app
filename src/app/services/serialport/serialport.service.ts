@@ -25,15 +25,15 @@ export class SerialportService {
 
   public init(): void {
     const {
-      parsers: { Readline },
-    } = this.serialPort,
-     {serialPort} = this;
+        parsers: { Readline },
+      } = this.serialPort,
+      { serialPort } = this;
     this.serialPort
       .list()
       .then((ports: any) => {
         console.log('all ports', ports);
         this.arduinoSerialPortDetails = ports.filter(
-          (port) => port.manufacturer && port.vendorId.indexOf('2341') > -1
+          (port) => port.manufacturer && port.vendorId.indexOf('2341') > -1,
         )[0];
         console.log('arduport', this.arduinoSerialPortDetails);
         this.port = new serialPort(this.arduinoSerialPortDetails.comName, {

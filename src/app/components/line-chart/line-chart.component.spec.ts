@@ -3,8 +3,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { LineChartComponent } from './line-chart.component';
 
 describe('LineChartComponent', () => {
-  let component: LineChartComponent,
-    fixture: ComponentFixture<LineChartComponent>;
+  let component: LineChartComponent, fixture: ComponentFixture<LineChartComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({

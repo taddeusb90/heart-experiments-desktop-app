@@ -7,7 +7,7 @@ import { ElectronService } from './services/electron/electron.service';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
   @HostBinding('class') componentCssClass;
@@ -15,7 +15,7 @@ export class AppComponent {
   constructor(
     public electronService: ElectronService,
     public overlayContainer: OverlayContainer,
-    private translate: TranslateService
+    private translate: TranslateService,
   ) {
     translate.setDefaultLang('en');
     console.log('AppConfig', AppConfig);
@@ -44,5 +44,4 @@ export class AppComponent {
   closeApp() {
     this.electronService.ipcRenderer.send('app-close', true);
   }
-
 }
