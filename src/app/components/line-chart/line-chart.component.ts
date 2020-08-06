@@ -14,32 +14,30 @@ export class LineChartComponent implements OnInit, OnChanges {
   @Input() data: number[] = [];
   @Input() metric: number;
   @Input() showLabel = 1;
-  hostElement; // Native element hosting the SVG container
-  svg; // Top level SVG element
-  g; // SVG Group element
-  colorScale; // D3 color provider
-  x; // X-axis graphical coordinates
-  y; // Y-axis graphical coordinates
+  hostElement;
+  svg;
+  g;
+  colorScale;
+  x;
+  y;
   colors = d3.scaleOrdinal(d3.schemeCategory10);
-  paths; // Path elements for each area chart
-  area; // For D3 area function
-  histogram; // For D3 histogram function
+  line;
 
   constructor(private elRef: ElementRef) {
     this.hostElement = this.elRef.nativeElement;
   }
   ngOnInit(): void {
-    this.createChart(this.data);
+    this.createChart();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.metric) {
-      this.updateChart(this.data);
-      this.updateAreaCharts();
+      console.log(this.data, changes.metric);
+      this.updateChart();
     }
   }
 
-  private createChart(data: number[]): void {
+  private createChart(): void {
     this.removeExistingChartFromParent();
 
     this.setChartDimensions();
@@ -52,27 +50,7 @@ export class LineChartComponent implements OnInit, OnChanges {
 
     this.createYAxis();
 
-    // d3 area and histogram functions  has to be declared after x and y functions are defined
-    this.area = d3
-      .area()
-      .x((datum: any) => this.x(d3.mean([datum.x1, datum.x2])))
-      .y0(this.y(0))
-      .y1((datum: any) => this.y(datum.length));
-
-    this.histogram = d3
-      .histogram()
-      .value((datum) => datum)
-      .domain([0, this.xmax])
-      .thresholds(this.x.ticks(this.hticks));
-
-    // data has to be processed after area and histogram functions are defined
-    this.processData(data);
-
-    this.createAreaCharts();
-  }
-
-  private processData(data): void {
-    this.histogram(data);
+    this.drawLineAndPath();
   }
 
   private setChartDimensions(): void {
@@ -103,14 +81,14 @@ export class LineChartComponent implements OnInit, OnChanges {
       .call(
         d3
           .axisBottom(this.x)
-          .tickSize(0)
+          .tickSize(1)
           .tickFormat(<any>''),
       );
 
     this.g
       .append('g')
       .attr('transform', 'translate(0,90)')
-      .style('font-size', '6')
+      .style('font-size', 4)
       .style('stroke-dasharray', '1,1')
       .attr('stroke-width', 0.1)
       .call(d3.axisBottom(this.x).ticks(10).tickSize(-80));
@@ -134,54 +112,39 @@ export class LineChartComponent implements OnInit, OnChanges {
       .style('stroke-dasharray', '1,1')
       .attr('stroke-width', 0.1)
       .call(d3.axisLeft(this.y).ticks(4).tickSize(-140))
-      .style('font-size', '6');
+      .style('font-size', 4);
 
     if (this.showLabel === 1) {
       this.g
         .append('text')
         .attr('text-anchor', 'middle')
         .attr('transform', 'translate(10,50) rotate(-90)')
-        .style('font-size', 8)
+        .style('font-size', 4)
         .text('Luminosity');
     }
   }
-  private createAreaCharts(): void {
-    this.paths = [];
-    this.paths.push(
-      this.g
-        .append('path')
-        .datum(this.data)
-        .attr('fill', this.colorScale('' + 1))
-        .attr('stroke-width', 0.1)
-        .attr('opacity', 0.5)
-        .attr('d', (datum: any) => this.area(datum)),
-    );
+
+  private drawLineAndPath(): void {
+    this.line = d3
+      .line()
+      .x((d: any) => this.x(d.index))
+      .y((d: any) => this.y(d.value));
+    this.svg
+      .append('path')
+      .datum(this.data.map((value, index) => ({ index, value })))
+      .attr('class', 'line')
+      .attr('fill', 'none')
+      .attr('stroke', 'steelblue')
+      .attr('stroke-width', 0.5)
+      .attr('d', this.line);
   }
 
-  public updateChart(data: number[]): void {
+  public updateChart(): void {
     if (!this.svg) {
-      this.createChart(data);
+      this.createChart();
       return;
     }
-
-    this.processData(data);
-  }
-
-  private updateAreaCharts(): void {
-    this.paths.forEach((path) => {
-      path
-        .datum(this.data)
-        .transition()
-        .duration(this.transitionTime)
-        .attr(
-          'd',
-          d3
-            .area()
-            .x((datum: any) => this.x(d3.mean([datum.x1, datum.x2])))
-            .y0(this.y(0))
-            .y1((datum: any) => this.y(datum.length)),
-        );
-    });
+    this.drawLineAndPath();
   }
 
   private removeExistingChartFromParent(): void {
