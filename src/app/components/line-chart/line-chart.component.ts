@@ -60,7 +60,7 @@ export class LineChartComponent implements OnInit, OnChanges {
       .select(this.hostElement)
       .append('svg')
       .attr('width', '100%')
-      .attr('height', '100%')
+      .attr('height', '50%')
       .attr('viewBox', '0 0 ' + viewBoxWidth + ' ' + viewBoxHeight);
   }
 
@@ -73,7 +73,10 @@ export class LineChartComponent implements OnInit, OnChanges {
   }
 
   private createXAxis(): void {
-    this.x = d3.scaleLinear().domain([0, this.xmax]).range([30, 170]);
+    this.x = d3
+      .scaleLinear()
+      .domain([0, this.data.length < 100 ? this.xmax : this.data.length])
+      .range([30, 170]);
     this.g
       .append('g')
       .attr('transform', 'translate(0,90)')
@@ -95,7 +98,14 @@ export class LineChartComponent implements OnInit, OnChanges {
   }
 
   private createYAxis(): void {
-    this.y = d3.scaleLinear().domain([0, this.ymax]).range([90, 10]);
+    this.y = d3
+      .scaleLinear()
+      .domain(
+        this.data.length
+          ? [Math.min(...this.data) * 0.9, Math.max(...this.data) * 1.1]
+          : [0, this.ymax],
+      )
+      .range([90, 10]);
     this.g
       .append('g')
       .attr('transform', 'translate(30,0)')
@@ -124,6 +134,11 @@ export class LineChartComponent implements OnInit, OnChanges {
     }
   }
 
+  // private updateDomains(): void {
+  //   this.x.domain([0, this.data.length < 100 ? this.xmax : this.data.length]);
+  //   this.y.domain([this.data.length ? Math.min(...this.data) : 0, this.ymax]);
+  // }
+
   private drawLineAndPath(): void {
     this.line = d3
       .line()
@@ -144,6 +159,8 @@ export class LineChartComponent implements OnInit, OnChanges {
       this.createChart();
       return;
     }
+    this.createChart();
+    // this.updateDomains();
     this.drawLineAndPath();
   }
 
