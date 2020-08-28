@@ -1,1 +1,3 @@
-export const CYCLE_STEPS = 2;
+export const CYCLE_STEPS = 400; // 400;
+
+export const SENSITIVITY = 100;

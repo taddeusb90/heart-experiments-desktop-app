@@ -25,14 +25,17 @@ export class LineChartComponent implements OnInit, OnChanges {
 
   constructor(private elRef: ElementRef) {
     this.hostElement = this.elRef.nativeElement;
+    setInterval(() => {
+      this.updateChart();
+    }, 1000);
   }
+
   ngOnInit(): void {
     this.createChart();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.metric) {
-      console.log(this.data, changes.metric);
+    if (changes.data) {
       this.updateChart();
     }
   }
@@ -133,11 +136,6 @@ export class LineChartComponent implements OnInit, OnChanges {
         .text('Luminosity');
     }
   }
-
-  // private updateDomains(): void {
-  //   this.x.domain([0, this.data.length < 100 ? this.xmax : this.data.length]);
-  //   this.y.domain([this.data.length ? Math.min(...this.data) : 0, this.ymax]);
-  // }
 
   private drawLineAndPath(): void {
     this.line = d3

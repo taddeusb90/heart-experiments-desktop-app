@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Subject, Observable } from 'rxjs';
-import { CYCLE_STEPS } from '../../constants/graph';
+import { CYCLE_STEPS, SENSITIVITY } from '../../constants/graph';
 import { COMPLETE, INCOMPLETE } from '../../constants/decellularization-statuses';
 
 @Injectable({
@@ -29,12 +29,15 @@ export class GraphService {
       this.cycleDataPoints.length - this.sliceLength,
       this.cycleDataPoints.length,
     );
-    return dataSubset.every((dataPoint) => dataPoint === dataSubset[0]);
+
+    return dataSubset.every(
+      (dataPoint) =>
+        Math.round(dataPoint * SENSITIVITY) === Math.round(dataSubset[0] * SENSITIVITY),
+    );
   };
 
   public setCurrentDataPoint = (currentDataPoint: number): void => {
     this.cycleDataPoints.push(currentDataPoint);
-
     if (this.cycleIndex >= this.numberOfValuesPerCycle) {
       const average = this.cycleDataPoints.reduce((a, b) => a + b, 0) / this.cycleDataPoints.length;
       this.processedDataPoints.push(average);
@@ -44,8 +47,8 @@ export class GraphService {
     }
 
     this.cycleDataPoints.push(currentDataPoint);
-    this.decellularizationStatus = this.decellularizationStatusComplete() ? COMPLETE : INCOMPLETE;
-    // console.log(this.processedDataPoints, this.cycleDataPoints, this.decellularizationStatus);
+    if (this.decellularizationStatus !== COMPLETE)
+      this.decellularizationStatus = this.decellularizationStatusComplete() ? COMPLETE : INCOMPLETE;
     this.cycleIndex += 1;
   };
 
