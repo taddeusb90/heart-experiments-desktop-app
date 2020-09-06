@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { CameraService } from '../../services/camera/camera.service';
+import { SpectrometerService } from '../../services/spectrometer/spectrometer.service';
 
 @Component({
   selector: 'app-camera',
@@ -7,7 +8,8 @@ import { CameraService } from '../../services/camera/camera.service';
   styleUrls: ['./camera.component.scss'],
 })
 export class CameraComponent {
-  constructor(public cameraService: CameraService) {
+  public spectroMetric: number;
+  constructor(public cameraService: CameraService, spectrometerService: SpectrometerService) {
     setTimeout(() => {
       // eslint-disable-next-line prefer-destructuring
       const video = document.getElementsByTagName('video')[0];
@@ -16,5 +18,9 @@ export class CameraComponent {
       video.style.height = '500px';
       video.style.margin = '-62px 0 0 -167px';
     }, 2000);
+
+    spectrometerService.spectroMetricObservable.subscribe((spectroMetric) => {
+      this.spectroMetric = spectroMetric;
+    });
   }
 }
