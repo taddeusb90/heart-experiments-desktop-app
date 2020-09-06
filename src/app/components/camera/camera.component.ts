@@ -14,9 +14,9 @@ export class CameraComponent {
       // eslint-disable-next-line prefer-destructuring
       const video = document.getElementsByTagName('video')[0];
       video.style.position = 'absolute';
-      video.style.width = '1000px';
-      video.style.height = '500px';
-      video.style.margin = '-62px 0 0 -167px';
+      video.style.width = '857px';
+      video.style.height = '450px';
+      video.style.margin = '-36px 0px 0px -101px';
     }, 2000);
 
     spectrometerService.spectroMetricObservable.subscribe((spectroMetric) => {

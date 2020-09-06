@@ -20,7 +20,7 @@ export class SpectrometerService {
   measureImage(filePath: string): Promise<number> {
     return new Promise(async (resolve, reject) => {
       const buffer = await this.sharp(filePath)
-        .extract({ left: 180, top: 10, width: 851, height: 617 })
+        .extract({ left: 170, top: 40, width: 650, height: 617 })
         .toBuffer();
 
       this.sharp(buffer).stats((err, stats) => {
