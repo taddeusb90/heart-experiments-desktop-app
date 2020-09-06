@@ -78,7 +78,7 @@ export class LineChartComponent implements OnInit, OnChanges {
   private createXAxis(): void {
     this.x = d3
       .scaleLinear()
-      .domain([0, this.data.length < 100 ? this.xmax : this.data.length])
+      .domain([-1, this.data.length < 100 ? this.xmax : this.data.length])
       .range([30, 170]);
     this.g
       .append('g')
