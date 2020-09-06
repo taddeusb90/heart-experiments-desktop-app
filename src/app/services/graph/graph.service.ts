@@ -12,7 +12,7 @@ export class GraphService {
   public processedDataPoints: number[] = [];
   private numberOfValuesPerCycle: number = CYCLE_STEPS;
   private cycleIndex = 0;
-  private sliceLength = 5;
+  private sliceLength = 50;
   public decellularizationStatus = INCOMPLETE;
 
   public updates: Subject<number> = new Subject<number>();

@@ -11,8 +11,12 @@ export class SpectrometerService {
   }
 
   measureImage(filePath: string): Promise<number> {
-    return new Promise((resolve, reject) => {
-      this.sharp(filePath).stats((err, stats) => {
+    return new Promise(async (resolve, reject) => {
+      const buffer = await this.sharp(filePath)
+        .extract({ left: 180, top: 10, width: 851, height: 617 })
+        .toBuffer();
+
+      this.sharp(buffer).stats((err, stats) => {
         if (err) reject(err);
         const channelsMean =
           stats.channels.reduce((acc, channel) => {
