@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Subject, Observable } from 'rxjs';
-import { CYCLE_STEPS, SENSITIVITY } from '../../constants/graph';
+import { CYCLE_STEPS, SENSITIVITY, MINIMUM_WAIT_CYCLES } from '../../constants/graph';
 import { COMPLETE, INCOMPLETE } from '../../constants/decellularization-statuses';
 
 @Injectable({
@@ -12,7 +12,7 @@ export class GraphService {
   public processedDataPoints: number[] = [];
   private numberOfValuesPerCycle: number = CYCLE_STEPS;
   private cycleIndex = 0;
-  private sliceLength = 50;
+  private sliceLength = 20;
   public decellularizationStatus = INCOMPLETE;
 
   public updates: Subject<number> = new Subject<number>();
@@ -24,7 +24,11 @@ export class GraphService {
   }
 
   private decellularizationStatusComplete = (): boolean => {
-    if (this.cycleDataPoints.length < this.sliceLength) return false;
+    if (
+      this.cycleDataPoints.length < this.sliceLength &&
+      this.cycleDataPoints.length < MINIMUM_WAIT_CYCLES
+    )
+      return false;
     const dataSubset = this.cycleDataPoints.slice(
       this.cycleDataPoints.length - this.sliceLength,
       this.cycleDataPoints.length,
