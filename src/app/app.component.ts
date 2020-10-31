@@ -31,6 +31,7 @@ export class AppComponent {
     } else {
       console.log('Mode web');
     }
+    this.electronService.ipcRenderer.send('app-maximize', true);
   }
 
   minimizeApp() {
