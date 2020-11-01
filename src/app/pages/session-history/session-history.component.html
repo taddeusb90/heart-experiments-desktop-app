@@ -1,3 +1,11 @@
 <div class="session-history-container">
-	<p>Session history</p>
+	<h2>Session history</h2>
+	<div class="session-history-list" *ngIf="sessions.length">
+		<div *ngFor="let session of sessions">
+			{{session.id}}
+			{{session.session}}
+			{{session.created_at}}
+			{{session. items}}
+		</div>
+	</div>
 </div>

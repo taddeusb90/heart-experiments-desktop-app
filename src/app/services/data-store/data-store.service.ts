@@ -61,11 +61,14 @@ export class DataStoreService {
     );
   };
 
-  public getAllSessions(): any {
-    return this.db.run('SELECT * FROM sessions');
-  }
+  public getAllSessions = async (): Promise<any> => {
+    const data = await this.db.all(
+      'SELECT s.id, s.session, s.created_at, COUNT(si.session_id) as items FROM sessions as s LEFT JOIN session_info AS si ON s.id = si.session_id GROUP BY s.session HAVING items > 10000;',
+    );
+    return data;
+  };
 
-  public getAllSessionInfo(sessionId): any {
-    return this.db.run('SELECT * FROM session_info where session_id = ?', [sessionId]);
-  }
+  public getAllSessionInfo = async (sessionId): Promise<any> => {
+    const data = await this.db.all('SELECT * FROM session_info where session_id = ?', [sessionId]);
+  };
 }
