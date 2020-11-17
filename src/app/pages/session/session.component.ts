@@ -13,6 +13,7 @@ export class SessionComponent {
   public dataPoints: number[] = [];
   public metric: number;
   public decellularizationStatus: string;
+  public decellularizationProgress = 22.2;
 
   constructor(graphService: GraphService, sessionService: SessionService) {
     this.dataPoints = graphService.processedDataPoints;
