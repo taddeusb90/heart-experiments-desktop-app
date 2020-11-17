@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
-import { OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { DataStoreService } from '../../services/data-store/data-store.service';
+
 @Component({
   selector: 'session-history',
   templateUrl: './session-history.component.html',
@@ -9,13 +10,15 @@ import { DataStoreService } from '../../services/data-store/data-store.service';
 export class SessionHistoryComponent implements OnInit {
   public sessions: any[] = [];
 
-  constructor(private dataStoreService: DataStoreService) {}
+  constructor(private router: Router, private dataStoreService: DataStoreService) {}
 
   ngOnInit() {
-    setTimeout(() => {
-      this.dataStoreService.getAllSessions().then((data) => {
-        this.sessions = data;
-      });
-    }, 1000);
+    this.dataStoreService.getAllSessions().then((data) => {
+      this.sessions = data;
+    });
   }
+
+  goToCompareSessions = (): void => {
+    this.router.navigate(['/compare-sessions', { sessions: [3, 4] }]);
+  };
 }

@@ -70,5 +70,19 @@ export class DataStoreService {
 
   public getAllSessionInfo = async (sessionId): Promise<any> => {
     const data = await this.db.all('SELECT * FROM session_info where session_id = ?', [sessionId]);
+    return data;
+  };
+
+  public getAggregatedSessionInfo = async (sessionId): Promise<any> => {
+    const data = await this.db.all(`
+      SELECT
+	      id-(select id from session_info where session_id= ${sessionId} limit 1) as rn,
+	      session_id,
+	      (id-(select id from session_info where session_id= ${sessionId} limit 1))/400 as batch,
+        avg(spectro_metric) as average_metric
+      FROM session_info
+      WHERE session_id = ${sessionId}
+      group by rn/400;`);
+    return data;
   };
 }

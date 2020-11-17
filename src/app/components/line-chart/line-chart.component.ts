@@ -11,7 +11,7 @@ export class LineChartComponent implements OnInit, OnChanges {
   xmax = 100;
   ymax = 255;
   @Input() hticks = 60;
-  @Input() data: number[] = [];
+  @Input() data: any[] = [];
   @Input() metric: number;
   @Input() showLabel = 1;
   hostElement;
@@ -76,10 +76,18 @@ export class LineChartComponent implements OnInit, OnChanges {
   }
 
   private createXAxis(): void {
-    this.x = d3
-      .scaleLinear()
-      .domain([-1, this.data.length < 100 ? this.xmax : this.data.length])
-      .range([30, 170]);
+    let length = this.xmax;
+
+    if (this.data && this.data.length && this.data[0].length) {
+      this.data.forEach((subset) => {
+        if (subset.length > length) {
+          // eslint-disable-next-line prefer-destructuring
+          length = subset.length;
+        }
+      });
+    }
+
+    this.x = d3.scaleLinear().domain([-1, length]).range([30, 170]);
     this.g
       .append('g')
       .attr('transform', 'translate(0,90)')
@@ -101,14 +109,27 @@ export class LineChartComponent implements OnInit, OnChanges {
   }
 
   private createYAxis(): void {
-    this.y = d3
-      .scaleLinear()
-      .domain(
-        this.data.length
-          ? [Math.min(...this.data) * 0.9, Math.max(...this.data) * 1.1]
-          : [0, this.ymax],
-      )
-      .range([90, 10]);
+    let min, max;
+    if (this.data && this.data.length && this.data[0].length) {
+      this.data.forEach((subset) => {
+        if (!min && !max) {
+          min = Math.min(...subset);
+          max = Math.max(...subset);
+        } else {
+          if (min > Math.min(...subset)) {
+            min = Math.min(...subset);
+          }
+          if (max < Math.max(...subset)) {
+            max = Math.max(...subset);
+          }
+        }
+      });
+    } else if (this.data && this.data.length) {
+      min = Math.min(...this.data);
+      max = Math.max(...this.data);
+    }
+    const domain = this.data && this.data.length ? [min * 0.9, max * 1.1] : [0, this.ymax];
+    this.y = d3.scaleLinear().domain(domain).range([90, 10]);
     this.g
       .append('g')
       .attr('transform', 'translate(30,0)')
@@ -142,14 +163,27 @@ export class LineChartComponent implements OnInit, OnChanges {
       .line()
       .x((d: any) => this.x(d.index))
       .y((d: any) => this.y(d.value));
-    this.svg
-      .append('path')
-      .datum(this.data.map((value, index) => ({ index, value })))
-      .attr('class', 'line')
-      .attr('fill', 'none')
-      .attr('stroke', 'steelblue')
-      .attr('stroke-width', 0.5)
-      .attr('d', this.line);
+    if (this.data && this.data.length && this.data[0].length) {
+      this.data.forEach((subset, idx) =>
+        this.svg
+          .append('path')
+          .datum(subset.map((value, index) => ({ index, value })))
+          .attr('class', 'line')
+          .attr('fill', 'none')
+          .attr('stroke', this.colors(idx.toString()))
+          .attr('stroke-width', 0.5)
+          .attr('d', this.line),
+      );
+    } else if (this.data && this.data.length) {
+      this.svg
+        .append('path')
+        .datum(this.data.map((value, index) => ({ index, value })))
+        .attr('class', 'line')
+        .attr('fill', 'none')
+        .attr('stroke', 'steelblue')
+        .attr('stroke-width', 0.5)
+        .attr('d', this.line);
+    }
   }
 
   public updateChart(): void {

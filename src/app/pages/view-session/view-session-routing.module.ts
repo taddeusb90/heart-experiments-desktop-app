@@ -5,7 +5,7 @@ import { ViewSessionComponent } from './view-session.component';
 
 const routes: Routes = [
   {
-    path: 'view-session',
+    path: 'view-session/:id',
     component: ViewSessionComponent,
   },
 ];

@@ -1,8 +1,13 @@
 <div class="session-history-container">
 	<h2>Session history</h2>
 	<div class="session-history-list" *ngIf="sessions.length">
+		<button
+    mat-raised-button
+    color="secondary"
+    (click)="goToCompareSessions()"
+		>COMPARE SESSIONS</button>
 		<div *ngFor="let session of sessions">
-			{{session.id}}
+			<a routerLink="/view-session/{{session.id}}">{{session.id}}</a>
 			{{session.session}}
 			{{session.created_at}}
 			{{session. items}}

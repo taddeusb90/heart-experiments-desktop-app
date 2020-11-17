@@ -15,6 +15,7 @@ import { SessionHistoryModule } from './pages/session-history/session-history.mo
 import { AppComponent } from './app.component';
 import { WebviewDirective } from './directives/webview/webview.directive';
 import { MaterialModule } from './material.module';
+import { LineChartModule } from './components/line-chart/line-chart.module';
 import { CompareSessionsModule } from './pages/compare-sessions/compare-sessions.module';
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
@@ -34,6 +35,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     SessionHistoryModule,
     AppRoutingModule,
     MaterialModule,
+    LineChartModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,

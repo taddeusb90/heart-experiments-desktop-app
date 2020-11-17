@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { DataStoreService } from '../../services/data-store/data-store.service';
 
 @Component({
   selector: 'main-menu',
@@ -7,13 +8,17 @@ import { Router } from '@angular/router';
   styleUrls: ['./main-menu.component.scss'],
 })
 export class MainMenuComponent {
-  constructor(private router: Router) {}
+  constructor(private router: Router, private dataSource: DataStoreService) {}
 
   goToSessionHistory = (): void => {
     this.router.navigate(['session-history']);
   };
 
   goToRecordSession = (): void => {
-    this.router.navigate(['compare-sessions']);
+    this.router.navigate(['session']);
+  };
+
+  goToInformation = (): void => {
+    this.router.navigate(['info']);
   };
 }

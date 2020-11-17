@@ -1,3 +1,5 @@
-<div class="view-session-container">
-	<p>View session</p>
+<div class="view-session-container" *ngIf="metrics">
+	<p>View session: {{sessionId}}</p>
+	<app-line-chart [data]="metrics"></app-line-chart>
+	<p *ngFor="let session of sessionInfo">{{session.batch}} {{session.average_metric}}</p>
 </div>
