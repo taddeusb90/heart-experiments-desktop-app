@@ -6,8 +6,8 @@ import commonSetup from './common-setup';
 describe('heart-experiments-desktop App', function () {
   commonSetup.apply(this);
 
-  let browser: any;
-  let client: SpectronClient;
+  let browser: any,
+   client: SpectronClient;
 
   beforeEach(function () {
     client = this.app.client;

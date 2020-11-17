@@ -1,0 +1,101 @@
+{
+  "env": {
+    "browser": true,
+    "node": true,
+    "es6": true,
+    "es2017": true
+  },
+  "extends": [
+    "prettier",
+    "prettier/@typescript-eslint",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:prettier/recommended"
+  ],
+  "parserOptions": {
+    "tsconfigRootDir": ".",
+    "ecmaVersion": 2018,
+    "sourceType": "module"
+  },
+  "globals": {
+    "Atomics": "readonly",
+    "SharedArrayBuffer": "readonly"
+  },
+  "parser": "@typescript-eslint/parser",
+
+  "plugins": ["import", "prettier", "@typescript-eslint"],
+  "rules": {
+    "quotes": ["error", "single", { "avoidEscape": true }],
+    "camelcase": "error",
+    "prefer-destructuring": "error",
+    "no-else-return": "error",
+    "no-nested-ternary": "error",
+    "no-restricted-globals": "off",
+    "no-shadow": "error",
+    "no-unused-expressions": "error",
+    "prefer-promise-reject-errors": "error",
+    "linebreak-style": ["error", "unix"],
+    "no-param-reassign": ["error", { "props": true }],
+    "one-var": "error",
+    "array-callback-return": "error",
+    "no-bitwise": "error",
+    "no-return-assign": "error",
+
+    "guard-for-in": "warn",
+    "no-restricted-syntax": "warn",
+    "consistent-return": "warn",
+    "no-console": ["warn"],
+    "no-debugger": ["warn"],
+
+    "no-unused-vars": "off", // turned off covered better @typescript-eslint
+    "no-use-before-define": "off", // turned off covered better @typescript-eslint
+
+    "global-require": "error", // deprecated in v7
+    "no-buffer-constructor": "error", // deprecated in v7
+    "no-process-exit": "error", // deprecated in v7
+
+    "prettier/prettier": [
+      "error",
+      {},
+      {
+        "usePrettierrc": true
+      }
+    ],
+
+    "@typescript-eslint/no-unused-vars": "error",
+    "@typescript-eslint/no-use-before-define": ["error", { "typedefs": false }],
+    "@typescript-eslint/explicit-member-accessibility": "off",
+    "@typescript-eslint/explicit-function-return-type": "error",
+    "@typescript-eslint/interface-name-prefix": "off",
+
+    "import/no-self-import": "error",
+    "import/order": "error",
+    "import/no-cycle": "error",
+    "import/extensions": [
+      "error",
+      "ignorePackages",
+      {
+        "ts": "never",
+        "js": "never"
+      }
+    ],
+    "import/no-unresolved": ["error", { "caseSensitive": true }],
+    "import/no-extraneous-dependencies": ["error"]
+  },
+  "ignorePatterns": ["src/**/*.test.ts", "*.d.ts"],
+  "settings": {
+    "typescript": {
+      "alwaysTryTypes": true
+    },
+    "import/parsers": {
+      "@typescript-eslint/parser": [".ts"]
+    },
+    "import/resolver": {
+      "typescript": {
+        "directory": "./"
+      },
+      "node": {
+        "extensions": [".js", ".ts"]
+      }
+    }
+  }
+}

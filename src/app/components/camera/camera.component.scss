@@ -1,9 +1,18 @@
 .camera-container {
   position: relative;
   display: inline-block;
+  width: 500px;
+  height: 348px;
+  overflow: hidden;
   .camera-switch {
     position: absolute;
     right: 4px;
     top: 4px;
+  }
+  .spectro-metric {
+    position: absolute;
+    color: white;
+    margin: 10px;
+    bottom: 10px;
   }
 }

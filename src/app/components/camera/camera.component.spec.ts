@@ -3,14 +3,12 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { CameraComponent } from './camera.component';
 
 describe('CameraComponent', () => {
-  let component: CameraComponent;
-  let fixture: ComponentFixture<CameraComponent>;
+  let component: CameraComponent, fixture: ComponentFixture<CameraComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CameraComponent ]
-    })
-    .compileComponents();
+      declarations: [CameraComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

@@ -1,0 +1,14 @@
+export interface SessionInfo {
+  id?: number;
+  sessionId: number;
+  createdAt: Date;
+  imageLocation: string;
+  spectroMetric: number;
+  type: string;
+}
+
+export interface Session {
+  id?: number;
+  session: number;
+  createdAt: Date;
+}

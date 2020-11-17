@@ -1,77 +1,69 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { SessionService } from '../../services/session/session.service';
-import { COMPLETE, INCOMPLETE } from '../../constants/decellularization-statuses'; 
-
-
+import { COMPLETE, INCOMPLETE } from '../../constants/decellularization-statuses';
 
 @Component({
   selector: 'app-session-controls',
   templateUrl: './session-controls.component.html',
-  styleUrls: ['./session-controls.component.scss']
+  styleUrls: ['./session-controls.component.scss'],
 })
 export class SessionControlsComponent implements OnInit {
-  public decellularizationStatuses: Array<Object> = [
+  @Input() selectedStatus: string;
+  public decellularizationStatuses: Array<any> = [
     {
       viewValue: 'Complete',
-      value: COMPLETE
+      value: COMPLETE,
     },
     {
       viewValue: 'Incomplete',
-      value: INCOMPLETE
-    }
+      value: INCOMPLETE,
+    },
   ];
-  
-  public selectedStatus: string = INCOMPLETE;
 
-  constructor(private sessionService: SessionService) { }
+  constructor(private sessionService: SessionService) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.sessionService.setDecellularizationStatus(INCOMPLETE);
   }
 
-  public setDecellularizationStatus = () =>
+  public setDecellularizationStatus = (): void =>
     this.sessionService.setDecellularizationStatus(this.selectedStatus);
 
   public begin = (): void => {
     this.sessionService.startSession();
-  }
+  };
 
   public continue = (): void => {
     this.sessionService.continueSession();
-  }
-  
+  };
+
   public pause = (): void => {
     this.sessionService.pauseSession();
-  }
-  
+  };
+
   public end = (): void => {
     this.sessionService.endSession();
-  }
-  
+  };
+
   public reset = (): void => {
     this.sessionService.resetMotorPosition();
-  }
+  };
 
   public hardReset = (): void => {
     this.sessionService.hardResetMotorPosition();
-  }
+  };
 
-  public shouldDisplayBeginButton = (): boolean => 
-    this.sessionService.shouldDisplayBeginButton()
-  
-  public shouldDisplayContinueButton = (): boolean => 
-    this.sessionService.shouldDisplayContinueButton()
-  
-  public shouldEnableContinueButton = (): boolean => 
-    this.sessionService.shouldEnableContinueButton()
+  public shouldDisplayBeginButton = (): boolean => this.sessionService.shouldDisplayBeginButton();
 
-  public shouldEnablePauseButton = (): boolean => 
-    this.sessionService.shouldEnablePauseButton()
-  
-  public shouldEnableEndButton = (): boolean => 
-    this.sessionService.shouldEnableEndButton()
+  public shouldDisplayContinueButton = (): boolean =>
+    this.sessionService.shouldDisplayContinueButton();
 
-  public shouldEnableResetButton = (): boolean => 
-    this.sessionService.shouldEnableResetButton()
+  public shouldEnableContinueButton = (): boolean =>
+    this.sessionService.shouldEnableContinueButton();
 
+  public shouldEnablePauseButton = (): boolean => this.sessionService.shouldEnablePauseButton();
+
+  public shouldEnableEndButton = (): boolean => this.sessionService.shouldEnableEndButton();
+
+  public shouldEnableResetButton = (): boolean => this.sessionService.shouldEnableResetButton();
 }
