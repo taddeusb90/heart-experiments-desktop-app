@@ -14,8 +14,8 @@ export class CameraComponent {
       // eslint-disable-next-line prefer-destructuring
       const video = document.getElementsByTagName('video')[0];
       video.style.position = 'absolute';
-      video.style.width = '857px';
-      video.style.height = '450px';
+      video.style.width = '751px';
+      video.style.height = '394px';
       video.style.margin = '-36px 0px 0px -101px';
     }, 2000);
 
