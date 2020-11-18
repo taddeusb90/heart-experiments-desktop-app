@@ -8,7 +8,7 @@ import { ipcRenderer, webFrame, remote } from 'electron';
 import * as base64Img from 'base64-img';
 import * as sharp from 'sharp';
 import * as tf from '@tensorflow/tfjs';
-// import * as cv from 'opencv4nodejs';
+import * as cv from 'opencv4nodejs';
 
 @Injectable({
   providedIn: 'root',
@@ -22,7 +22,7 @@ export class ElectronService {
   base64Img: typeof base64Img;
   sharp: typeof sharp;
   tf: typeof tf;
-  // cv: typeof cv;
+  cv: typeof cv;
 
   get isElectron(): boolean {
     return window && window.process && window.process.type;
@@ -40,7 +40,7 @@ export class ElectronService {
       this.base64Img = window.require('base64-img');
       this.sharp = window.require('sharp');
       this.tf = window.require('@tensorflow/tfjs');
-      // this.cv = window.require('opencv4nodejs');
+      this.cv = window.require('opencv4nodejs');
     }
   }
 }
