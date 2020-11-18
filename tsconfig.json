@@ -1,5 +1,6 @@
 {
   "compileOnSave": false,
+  "skipLibCheck": true,
   "compilerOptions": {
     "module": "esnext",
     "outDir": "./dist/out-tsc",

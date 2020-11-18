@@ -85,6 +85,9 @@ export class LineChartComponent implements OnInit, OnChanges {
           length = subset.length;
         }
       });
+    } else if (this.data && this.data.length) {
+      // eslint-disable-next-line prefer-destructuring
+      length = this.data.length;
     }
 
     this.x = d3.scaleLinear().domain([-1, length]).range([30, 170]);
