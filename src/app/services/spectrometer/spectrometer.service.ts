@@ -24,6 +24,7 @@ export class SpectrometerService {
         .toBuffer();
 
       this.sharp(buffer).stats((err, stats) => {
+        console.log(stats);
         if (err) reject(err);
         const channelsMean =
           stats.channels.reduce((acc, channel) => {

@@ -10,6 +10,7 @@ import { ElectronService } from '../electron/electron.service';
 import { CameraService } from '../camera/camera.service';
 import { SpectrometerService } from '../spectrometer/spectrometer.service';
 import { DataStoreService } from '../data-store/data-store.service';
+import { ClassifierService } from '../classifier/classifier.service';
 
 const WAIT_BETWEEN_PHOTOS = 2000;
 
@@ -31,6 +32,7 @@ export class SessionService {
     public spectrometerService: SpectrometerService,
     public dataStoreService: DataStoreService,
     public graphService: GraphService,
+    public classifierService: ClassifierService,
   ) {
     if (!SessionService.instance) {
       SessionService.instance = this;
@@ -38,11 +40,12 @@ export class SessionService {
     SessionService.instance.sessionStatus = NOT_STARTED;
     SessionService.instance.decellularizationStatus = graphService.decellularizationStatus;
     serialportService.init();
-
+    classifierService.loadModel();
     cameraService.pictureObservable.subscribe(async (picture) => {
       if (!this.sessionTimestamp) return;
       const filePath = await this.processPicture(picture),
         metric = await this.spectrometerService.measureImage(filePath),
+        prediction = await this.classifierService.makePrediction(filePath),
         sessionInfo = {
           sessionId: this.sessionID,
           createdAt: new Date(),
@@ -50,6 +53,7 @@ export class SessionService {
           spectroMetric: metric,
           type: this.decellularizationStatus,
         };
+      console.log(prediction);
       this.graphService.setCurrentDataPoint(metric);
       this.dataStoreService.insertSessionInfo(sessionInfo);
     });
