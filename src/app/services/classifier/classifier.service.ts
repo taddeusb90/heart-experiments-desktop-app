@@ -1,5 +1,6 @@
 /* eslint-disable one-var */
 import { Injectable } from '@angular/core';
+import { Subject, Observable } from 'rxjs';
 import { ElectronService } from '../electron/electron.service';
 
 @Injectable({
@@ -11,7 +12,10 @@ export class ClassifierService {
   public cv: any;
   public sharp: any;
   public model: any;
-
+  public imageDataSubject: Subject<ImageData> = new Subject<ImageData>();
+  public predictionSubject: Subject<number> = new Subject<number>();
+  public canvas: HTMLCanvasElement;
+  public context: CanvasRenderingContext2D;
   constructor(public electronService: ElectronService) {
     if (!ClassifierService.instance) {
       ClassifierService.instance = this;
@@ -20,6 +24,12 @@ export class ClassifierService {
     this.cv = electronService.cv;
     this.sharp = electronService.sharp;
     this.model = this.tf.loadLayersModel('assets/model/model.json');
+    setTimeout(() => {
+      this.canvas = document.getElementById('classifier-canvas-1') as HTMLCanvasElement;
+      this.context = this.canvas.getContext('2d');
+    }, 2000);
+
+    return ClassifierService.instance;
   }
 
   loadModel = async (): Promise<void> => {
@@ -27,19 +37,31 @@ export class ClassifierService {
   };
 
   predict = async (image: any): Promise<number> => {
-    // await this.cv.imwrite('filename.jpg', image);
-    // const data = await this.cv.imencode('.jpg', image);
-    const data = await image.getData();
-    const imageData = new ImageData(200, 200);
-    for (let i = 0; i < data.length; i += 4) {
-      imageData.data[i] = data[i]; //red
-      imageData.data[i + 1] = data[i + 1]; //green
-      imageData.data[i + 2] = data[i + 2]; //blue
-      imageData.data[i + 3] = data[i + 3]; //alpha
+    await this.cv.imwrite('processedImage.png', image);
+    const imageBuffer = image.getDataAsArray();
+    const data = image.getData();
+    const imgData = this.context.createImageData(200, 200);
+
+    const newImageData = imageBuffer.reduce((acc, cv) => {
+      return acc.concat(
+        cv.reduce((ac, c) => {
+          return ac.concat(...c, 255);
+        }, []),
+      );
+    }, []);
+
+    for (let i = 0; i < imgData.data.length; i += 4) {
+      imgData.data[i + 0] = newImageData[i + 0]; // red
+      imgData.data[i + 1] = newImageData[i + 1]; // greem
+      imgData.data[i + 2] = newImageData[i + 2]; // blue
+      imgData.data[i + 3] = newImageData[i + 3]; // alpha
     }
-    const ndarray = await this.tf.browser.fromPixels(imageData).toFloat().expandDims();
+
+    this.handleImageData(imgData);
+    const ndarray = await this.tf.tensor3d(imageBuffer).toFloat().expandDims();
     const prediction = await this.model.predict(ndarray).data();
     const predictedClass = prediction.indexOf(Math.max(...prediction));
+    this.handlePrediction(predictedClass);
     return predictedClass;
   };
 
@@ -71,4 +93,20 @@ export class ClassifierService {
     const prediction = await this.predict(image);
     return prediction;
   };
+
+  public get imageDataObservable(): Observable<ImageData> {
+    return this.imageDataSubject.asObservable();
+  }
+
+  public handleImageData(imageData: ImageData): void {
+    this.imageDataSubject.next(imageData);
+  }
+
+  public get predictionObservable(): Observable<number> {
+    return this.predictionSubject.asObservable();
+  }
+
+  public handlePrediction(prediction: number): void {
+    this.predictionSubject.next(prediction);
+  }
 }

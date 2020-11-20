@@ -1,5 +1,6 @@
 <div class="session-container">
 	<app-camera (pictureTaken)="handleImage($event)"></app-camera>
+	<app-classifier-ui></app-classifier-ui>
 	<mat-progress-bar mode="determinate" [value]="decellularizationProgress"></mat-progress-bar>
 	<app-line-chart [data]="dataPoints" [metric]="metric"></app-line-chart>
 	<app-session-controls [selectedStatus]="decellularizationStatus"></app-session-controls>
