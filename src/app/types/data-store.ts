@@ -5,6 +5,7 @@ export interface SessionInfo {
   imageLocation: string;
   spectroMetric: number;
   type: string;
+  prediction: number;
 }
 
 export interface Session {

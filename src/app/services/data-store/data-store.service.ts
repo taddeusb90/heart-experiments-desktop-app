@@ -48,15 +48,16 @@ export class DataStoreService {
   };
 
   public insertSessionInfo = async (sessionInfo: SessionInfo): Promise<any> => {
-    const { sessionId, createdAt, imageLocation, spectroMetric, type } = sessionInfo;
+    const { sessionId, createdAt, imageLocation, spectroMetric, type, prediction } = sessionInfo;
     await this.db.run(
-      'INSERT INTO session_info(session_id, created_at, image_location, spectro_metric, type) VALUES (?, ?, ?, ?, ?);',
+      'INSERT INTO session_info(session_id, created_at, image_location, spectro_metric, type, prediction) VALUES (?, ?, ?, ?, ?, ?);',
       [
         sessionId,
         moment(createdAt).format('YYYY-MM-DD HH:MM:SS'),
         imageLocation,
         spectroMetric,
         type,
+        prediction,
       ],
     );
   };

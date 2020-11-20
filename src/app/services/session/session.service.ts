@@ -12,7 +12,7 @@ import { SpectrometerService } from '../spectrometer/spectrometer.service';
 import { DataStoreService } from '../data-store/data-store.service';
 import { ClassifierService } from '../classifier/classifier.service';
 
-const WAIT_BETWEEN_PHOTOS = 2000;
+const WAIT_BETWEEN_PHOTOS = 1000;
 
 @Injectable({
   providedIn: 'root',
@@ -24,6 +24,9 @@ export class SessionService {
   public sessionTimestamp: number;
   public sessionID: number;
   public decellularizationStatusSubject: Subject<string> = new Subject<string>();
+  public decellularizationPercentageSubject: Subject<number> = new Subject<number>();
+  public predictions: number[] = [];
+  public decellularizationPercentage: number;
 
   constructor(
     public serialportService: SerialportService,
@@ -52,10 +55,25 @@ export class SessionService {
           imageLocation: filePath,
           spectroMetric: metric,
           type: this.decellularizationStatus,
+          prediction,
         };
-      console.log(prediction);
       this.graphService.setCurrentDataPoint(metric);
       this.dataStoreService.insertSessionInfo(sessionInfo);
+    });
+
+    classifierService.predictionObservable.subscribe((prediction) => {
+      this.predictions.push(prediction);
+      if (this.predictions.length > 400) {
+        this.predictions.shift();
+      }
+      this.decellularizationPercentage = Math.round(
+        (this.predictions.reduce((acc, cv) => {
+          return acc + cv;
+        }, 0) /
+          this.predictions.length) *
+          10,
+      );
+      this.handleDecellularizationPercentage(this.decellularizationPercentage);
     });
 
     // setTimeout(() => {
@@ -118,6 +136,13 @@ export class SessionService {
     });
   };
 
+  public get decellularizationPercentageObservable(): Observable<number> {
+    return this.decellularizationPercentageSubject.asObservable();
+  }
+
+  public handleDecellularizationPercentage(percentage: number): void {
+    return this.decellularizationPercentageSubject.next(percentage);
+  }
   public get decellularizationStatusObservable(): Observable<string> {
     return this.decellularizationStatusSubject.asObservable();
   }

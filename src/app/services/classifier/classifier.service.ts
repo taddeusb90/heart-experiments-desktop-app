@@ -37,9 +37,10 @@ export class ClassifierService {
   };
 
   predict = async (image: any): Promise<number> => {
-    await this.cv.imwrite('processedImage.png', image);
+    // const image = await this.cv.imread(
+    //   '/mnt/5898DFED2EC1349A/Projects/heart-experiments/desktop/src/assets/test/10/1599419759-rotated-0.jpg',
+    // );
     const imageBuffer = image.getDataAsArray();
-    const data = image.getData();
     const imgData = this.context.createImageData(200, 200);
 
     const newImageData = imageBuffer.reduce((acc, cv) => {
@@ -51,14 +52,19 @@ export class ClassifierService {
     }, []);
 
     for (let i = 0; i < imgData.data.length; i += 4) {
-      imgData.data[i + 0] = newImageData[i + 0]; // red
-      imgData.data[i + 1] = newImageData[i + 1]; // greem
-      imgData.data[i + 2] = newImageData[i + 2]; // blue
+      // channels are inverted below because opencv does not use the same ordering
+      imgData.data[i + 0] = newImageData[i + 2];
+      imgData.data[i + 1] = newImageData[i + 1];
+      imgData.data[i + 2] = newImageData[i + 0];
       imgData.data[i + 3] = newImageData[i + 3]; // alpha
     }
 
     this.handleImageData(imgData);
-    const ndarray = await this.tf.tensor3d(imageBuffer).toFloat().expandDims();
+
+    const ndarray = await this.tf.browser
+      .fromPixels(this.context.getImageData(10, 10, 200, 200))
+      .toFloat()
+      .expandDims();
     const prediction = await this.model.predict(ndarray).data();
     const predictedClass = prediction.indexOf(Math.max(...prediction));
     this.handlePrediction(predictedClass);

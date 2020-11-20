@@ -13,7 +13,7 @@ export class SessionComponent {
   public dataPoints: number[] = [];
   public metric: number;
   public decellularizationStatus: string;
-  public decellularizationProgress = 22.2;
+  public decellularizationProgress = 0;
 
   constructor(graphService: GraphService, sessionService: SessionService) {
     this.dataPoints = graphService.processedDataPoints;
@@ -23,6 +23,9 @@ export class SessionComponent {
     });
     sessionService.decellularizationStatusObservable.subscribe((status) => {
       this.decellularizationStatus = status;
+    });
+    sessionService.decellularizationPercentageObservable.subscribe((percentage) => {
+      this.decellularizationProgress = percentage;
     });
   }
 
