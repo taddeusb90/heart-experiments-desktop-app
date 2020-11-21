@@ -57,14 +57,12 @@ export class LineChartComponent implements OnInit, OnChanges {
   }
 
   private setChartDimensions(): void {
-    const viewBoxHeight = 100,
-      viewBoxWidth = 200;
     this.svg = d3
       .select(this.hostElement)
       .append('svg')
-      .attr('width', '100%')
-      .attr('height', '50%')
-      .attr('viewBox', '0 0 ' + viewBoxWidth + ' ' + viewBoxHeight);
+      .attr('width', '600')
+      .attr('height', '290')
+      .attr('viewBox', '74 0 90 100');
   }
 
   private addGraphicsElement(): void {

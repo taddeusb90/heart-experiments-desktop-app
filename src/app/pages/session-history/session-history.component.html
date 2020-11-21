@@ -1,16 +1,45 @@
 <div class="session-history-container">
 	<h2>Session history</h2>
-	<div class="session-history-list" *ngIf="sessions.length">
-		<button
+	<button
     mat-raised-button
     color="secondary"
     (click)="goToCompareSessions()"
 		>COMPARE SESSIONS</button>
-		<div *ngFor="let session of sessions">
-			<a routerLink="/view-session/{{session.id}}">{{session.id}}</a>
-			{{session.session}}
-			{{session.created_at}}
-			{{session. items}}
-		</div>
-	</div>
+
+	<table mat-table [dataSource]="sessions" class="mat-elevation-z8">
+		<ng-container matColumnDef="selected">
+			<th mat-header-cell *matHeaderCellDef> </th>
+			<td mat-cell *matCellDef="let element">
+				<mat-checkbox [checked]="element.selected" (change)="setChange(element.id, $event.checked)"></mat-checkbox></td>
+		</ng-container>
+
+		<ng-container matColumnDef="id">
+			<th mat-header-cell *matHeaderCellDef> No. </th>
+			<td mat-cell *matCellDef="let element">{{element.id}}</td>
+		</ng-container>
+
+		<ng-container matColumnDef="session">
+			<th mat-header-cell *matHeaderCellDef> Session </th>
+			<td mat-cell *matCellDef="let element"> {{element.session}} </td>
+		</ng-container>
+
+		<ng-container matColumnDef="created_at">
+			<th mat-header-cell *matHeaderCellDef> Created at </th>
+			<td mat-cell *matCellDef="let element"> {{element.created_at}} </td>
+		</ng-container>
+		
+		<ng-container matColumnDef="items">
+			<th mat-header-cell *matHeaderCellDef> Items </th>
+			<td mat-cell *matCellDef="let element"> {{element.items}} </td>
+		</ng-container>
+
+		<ng-container matColumnDef="view">
+			<th mat-header-cell *matHeaderCellDef>  </th>
+			<td mat-cell *matCellDef="let element"> <a mat-raised-button routerLink="/view-session/{{element.id}}"> View </a></td>
+		</ng-container>
+
+		<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  	<tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+	</table>
+
 </div>
