@@ -1,2 +1,16 @@
 .view-session-container {
+  > p {
+    margin: 0px 7%;
+  }
+  .charts {
+    display: flex;
+    margin: 0px 7%;
+    p {
+      padding: 0px 40px;
+    }
+  }
+  table {
+    width: 85%;
+    margin: 0px 7%;
+  }
 }
