@@ -34,11 +34,12 @@ export class ClassifierService {
 
   loadModel = async (): Promise<void> => {
     this.model = await this.tf.loadLayersModel('assets/model/model.json');
+    console.log('Finished loading model');
   };
 
   predict = async (images: any): Promise<number> => {
     const image = await this.cv.imread(
-      '/mnt/5898DFED2EC1349A/Projects/heart-experiments/desktop/src/assets/test/10/1598690604.jpg',
+      '/mnt/F2AE0559AE0517AD/Projects/heart-experiments/desktop/src/assets/test/10/1599416805.jpg',
     );
     const imageBuffer = image.getDataAsArray();
     const imgData = this.context.createImageData(200, 200);
@@ -61,14 +62,13 @@ export class ClassifierService {
 
     this.handleImageData(imgData);
 
-    const floatImage = await this.tf.browser
+    const tensor = await this.tf.browser
       .fromPixels(this.context.getImageData(10, 10, 200, 200))
       .toFloat();
-
-    const offset = this.tf.scalar(255.0);
-    const normalized = floatImage.sub(offset).div(offset);
-
-    const prediction = await this.model.predict(normalized.expandDims()).data();
+    const offset = this.tf.scalar(0.00392156862745098).toFloat();
+    const scaled = tensor.mul(offset).toFloat();
+    const normalized = scaled.expandDims();
+    const prediction = await this.model.predict(normalized).dataSync();
     const predictedClass = prediction.indexOf(Math.max(...prediction));
     this.handlePrediction(predictedClass);
     return predictedClass;
