@@ -37,10 +37,10 @@ export class ClassifierService {
     console.log('Finished loading model');
   };
 
-  predict = async (images: any): Promise<number> => {
-    const image = await this.cv.imread(
-      '/mnt/F2AE0559AE0517AD/Projects/heart-experiments/desktop/src/assets/test/10/1599416805.jpg',
-    );
+  predict = async (image: any): Promise<number> => {
+    // const image = await this.cv.imread(
+    //   '/mnt/F2AE0559AE0517AD/Projects/heart-experiments/desktop/src/assets/test/10/1599418360.jpg',
+    // );
     const imageBuffer = image.getDataAsArray();
     const imgData = this.context.createImageData(200, 200);
 
@@ -75,7 +75,7 @@ export class ClassifierService {
   };
 
   loadImage = async (filePath: string): Promise<any> => {
-    const image = await await this.sharp(filePath);
+    const image = await this.sharp(filePath);
     return image;
   };
 

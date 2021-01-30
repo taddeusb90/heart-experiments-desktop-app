@@ -1,5 +1,11 @@
 <br>
 <div class="controls-container">
+  <button 
+    mat-raised-button 
+    color="primary" 
+    (click)="takeInitialPhoto()"
+    [disabled]="shouldEnableInitialPhotoButton()"
+    >Initial Photo</button>
   <button
     mat-raised-button 
     *ngIf="shouldDisplayBeginButton()"

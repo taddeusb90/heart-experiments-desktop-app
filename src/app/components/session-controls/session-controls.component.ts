@@ -53,6 +53,11 @@ export class SessionControlsComponent implements OnInit {
     this.sessionService.hardResetMotorPosition();
   };
 
+  public takeInitialPhoto = (): void => this.sessionService.takeInitialPhoto();
+
+  public shouldEnableInitialPhotoButton = (): boolean =>
+    this.sessionService.shouldEnableInitialPhotoButton();
+
   public shouldDisplayBeginButton = (): boolean => this.sessionService.shouldDisplayBeginButton();
 
   public shouldDisplayContinueButton = (): boolean =>

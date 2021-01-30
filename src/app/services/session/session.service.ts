@@ -46,19 +46,21 @@ export class SessionService {
     classifierService.loadModel();
     cameraService.pictureObservable.subscribe(async (picture) => {
       if (!this.sessionTimestamp) return;
-      const filePath = await this.processPicture(picture),
-        metric = await this.spectrometerService.measureImage(filePath),
-        prediction = await this.classifierService.makePrediction(filePath),
-        sessionInfo = {
-          sessionId: this.sessionID,
-          createdAt: new Date(),
-          imageLocation: filePath,
-          spectroMetric: metric,
-          type: this.decellularizationStatus,
-          prediction,
-        };
-      this.graphService.setCurrentDataPoint(metric);
-      this.dataStoreService.insertSessionInfo(sessionInfo);
+      const filePath = await this.processPicture(picture);
+      if (![NOT_STARTED, ENDED].includes(this.sessionStatus)) {
+        const metric = await this.spectrometerService.measureImage(filePath),
+          prediction = await this.classifierService.makePrediction(filePath),
+          sessionInfo = {
+            sessionId: this.sessionID,
+            createdAt: new Date(),
+            imageLocation: filePath,
+            spectroMetric: metric,
+            type: this.decellularizationStatus,
+            prediction,
+          };
+        this.graphService.setCurrentDataPoint(metric);
+        this.dataStoreService.insertSessionInfo(sessionInfo);
+      }
     });
 
     classifierService.predictionObservable.subscribe((prediction) => {
@@ -123,16 +125,24 @@ export class SessionService {
       pictureTimestamp = Math.round(new Date().getTime() / 1000),
       saveDir = `${WORK_FOLDER}/sessions/${
         this.sessionTimestamp
-      }/${this.decellularizationStatus.toLocaleLowerCase()}`;
-
+      }/${this.decellularizationStatus.toLocaleLowerCase()}`,
+      initDir = `${WORK_FOLDER}/sessions`,
+      isInitPhoto = [NOT_STARTED, ENDED].includes(this.sessionStatus);
     return new Promise((resolve, reject) => {
-      base64Img.img(picture.imageAsDataUrl, saveDir, pictureTimestamp, (err, filePath) => {
-        if (err) {
-          reject(err);
-        }
-
-        resolve(filePath);
-      });
+      base64Img.img(
+        picture.imageAsDataUrl,
+        isInitPhoto ? initDir : saveDir,
+        isInitPhoto ? `${this.sessionTimestamp}-init` : pictureTimestamp,
+        (err, filePath) => {
+          if (err) {
+            reject(err);
+          }
+          if (isInitPhoto) {
+            this.spectrometerService.setInitialImage(filePath);
+          }
+          resolve(filePath);
+        },
+      );
     });
   };
 
@@ -151,6 +161,17 @@ export class SessionService {
     this.decellularizationStatus = status;
     this.decellularizationStatusSubject.next(status);
   };
+
+  public takeInitialPhoto = (): void => {
+    const date = new Date(),
+      timestamp = Math.round(date.getTime() / 1000);
+    this.sessionTimestamp = timestamp;
+    this.cameraService.triggerSnapshot();
+  };
+
+  public shouldEnableInitialPhotoButton = (): boolean =>
+    ![NOT_STARTED, ENDED].includes(this.sessionStatus);
+
   public shouldDisplayBeginButton = (): boolean =>
     [NOT_STARTED, ENDED].includes(this.sessionStatus);
 
@@ -201,12 +222,9 @@ export class SessionService {
 
   private doStart = async (): Promise<void> => {
     if (this.sessionStatus === STARTED) {
-      const date = new Date(),
-        timestamp = Math.round(date.getTime() / 1000);
-      this.sessionTimestamp = timestamp;
       this.sessionID = await this.dataStoreService.insertSession({
-        session: timestamp,
-        createdAt: date,
+        session: this.sessionTimestamp,
+        createdAt: new Date(this.sessionTimestamp * 1000),
       });
       setTimeout(() => {
         this.cameraService.triggerSnapshot();
