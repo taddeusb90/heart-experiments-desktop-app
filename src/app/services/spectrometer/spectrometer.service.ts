@@ -1,6 +1,5 @@
 /* eslint-disable one-var */
 import { Injectable } from '@angular/core';
-import { thresholdFreedmanDiaconis } from 'd3';
 import { Subject, Observable } from 'rxjs';
 import { ElectronService } from '../electron/electron.service';
 
