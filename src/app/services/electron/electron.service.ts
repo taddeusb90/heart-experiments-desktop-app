@@ -6,7 +6,6 @@ import { Injectable } from '@angular/core';
 // the resulting javascript file will look as if you never imported the module at all.
 import { ipcRenderer, webFrame, remote } from 'electron';
 import * as base64Img from 'base64-img';
-import * as sharp from 'sharp';
 import * as tf from '@tensorflow/tfjs';
 import * as cv from 'opencv4nodejs';
 
@@ -20,7 +19,6 @@ export class ElectronService {
   childProcess: typeof childProcess;
   fs: typeof fs;
   base64Img: typeof base64Img;
-  sharp: typeof sharp;
   tf: typeof tf;
   cv: typeof cv;
 
@@ -38,7 +36,6 @@ export class ElectronService {
       this.childProcess = window.require('child_process');
       this.fs = window.require('fs');
       this.base64Img = window.require('base64-img');
-      this.sharp = window.require('sharp');
       this.tf = window.require('@tensorflow/tfjs');
       this.cv = window.require('opencv4nodejs');
     }

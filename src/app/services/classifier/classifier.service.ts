@@ -10,7 +10,6 @@ export class ClassifierService {
   static instance: ClassifierService;
   public tf: any;
   public cv: any;
-  public sharp: any;
   public model: any;
   public imageDataSubject: Subject<ImageData> = new Subject<ImageData>();
   public predictionSubject: Subject<number> = new Subject<number>();
@@ -22,7 +21,6 @@ export class ClassifierService {
     }
     this.tf = electronService.tf;
     this.cv = electronService.cv;
-    this.sharp = electronService.sharp;
     this.model = this.tf.loadLayersModel('assets/model/model.json');
     setTimeout(() => {
       this.canvas = document.getElementById('classifier-canvas-1') as HTMLCanvasElement;
@@ -75,7 +73,7 @@ export class ClassifierService {
   };
 
   loadImage = async (filePath: string): Promise<any> => {
-    const image = await this.sharp(filePath);
+    const image = await this.cv.imread(filePath);
     return image;
   };
 
@@ -84,9 +82,8 @@ export class ClassifierService {
       top = 40,
       width = 650,
       height = 650;
-
-    let croppedImage = await image.extract({ top, left, width, height }).toBuffer();
-    croppedImage = await this.cv.imdecode(croppedImage);
+    const rect = new this.cv.Rect(left, top, width, height);
+    const croppedImage = await image.getRegion(rect);
     return croppedImage;
   };
 

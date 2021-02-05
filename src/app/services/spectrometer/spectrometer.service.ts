@@ -8,7 +8,6 @@ import { ElectronService } from '../electron/electron.service';
 })
 export class SpectrometerService {
   static instance: SpectrometerService;
-  private sharp: any;
   private cv: any;
   private initialImage: any;
   public spectroMetric: Subject<number> = new Subject<number>();
@@ -16,7 +15,6 @@ export class SpectrometerService {
     if (!SpectrometerService.instance) {
       SpectrometerService.instance = this;
     }
-    this.sharp = electronService.sharp;
     this.cv = electronService.cv;
     return SpectrometerService.instance;
   }

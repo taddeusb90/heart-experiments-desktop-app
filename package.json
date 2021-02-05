@@ -114,7 +114,6 @@
     "@tensorflow/tfjs": "2.7.0",
     "@tensorflow/tfjs-node": "2.7.0",
     "@types/serialport": "^6.0.3",
-    "@types/sharp": "0.24.0",
     "@types/sqlite3": "3.1.6",
     "aws-sdk": "2.656.0",
     "base64-img": "1.0.4",
@@ -124,7 +123,6 @@
     "ngx-webcam": "^0.2.6",
     "opencv4nodejs": "4.17.0",
     "serialport": "8.0.8",
-    "sharp": "0.23.4",
     "sqlite": "4.0.6",
     "sqlite3": "4.1.1",
     "tslib": "^1.10.0"
