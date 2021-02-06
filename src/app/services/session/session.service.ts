@@ -1,3 +1,4 @@
+/* eslint-disable one-var */
 import { Injectable } from '@angular/core';
 import { WebcamImage } from 'ngx-webcam';
 import { Subject, Observable } from 'rxjs';
@@ -48,16 +49,19 @@ export class SessionService {
       if (!this.sessionTimestamp) return;
       const filePath = await this.processPicture(picture);
       if (![NOT_STARTED, ENDED].includes(this.sessionStatus)) {
-        const metric = await this.spectrometerService.measureImage(filePath),
-          prediction = await this.classifierService.makePrediction(filePath),
-          sessionInfo = {
-            sessionId: this.sessionID,
-            createdAt: new Date(),
-            imageLocation: filePath,
-            spectroMetric: metric,
-            type: this.decellularizationStatus,
-            prediction,
-          };
+        const metric = await this.spectrometerService.measureImage(filePath);
+        console.log('metric', metric);
+
+        const prediction = await this.classifierService.makePrediction(filePath);
+        console.log('prediction', prediction);
+        const sessionInfo = {
+          sessionId: this.sessionID,
+          createdAt: new Date(),
+          imageLocation: filePath,
+          spectroMetric: metric,
+          type: this.decellularizationStatus,
+          prediction,
+        };
         this.graphService.setCurrentDataPoint(metric);
         this.dataStoreService.insertSessionInfo(sessionInfo);
       }
@@ -75,9 +79,9 @@ export class SessionService {
           this.predictions.length) *
           10,
       );
-      if (this.predictions.length === 400) {
-        this.handleDecellularizationPercentage(this.decellularizationPercentage);
-      }
+      // if (this.predictions.length === 400) {
+      this.handleDecellularizationPercentage(this.decellularizationPercentage);
+      // }
     });
 
     // setTimeout(() => {

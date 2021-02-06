@@ -26,6 +26,7 @@ export class SpectrometerService {
     this.initialImage = await this.cv.imread(initialImagePath);
     const rect = new this.cv.Rect(186, 0, 650, 620);
     this.initialImage = await this.initialImage.getRegion(rect);
+    console.log('finished loading initial image');
   }
 
   async measureImage(filePath: string): Promise<number> {
@@ -33,13 +34,16 @@ export class SpectrometerService {
     // let image = await this.cv.imread(
     //   '/mnt/F2AE0559AE0517AD/Projects/heart-experiments/data/sessions/1598688579/complete/1598689243.jpg',
     // );
+    console.log(image);
     const rect = new this.cv.Rect(186, 0, 650, 620);
     const region = await image.getRegion(rect);
     image = region;
+    console.log(this.initialImage);
     const diff = await this.initialImage.absdiff(image);
     const mask = await diff.cvtColor(this.cv.COLOR_BGR2GRAY);
     const th = 50;
-    const indexes = (await mask.getDataAsArray())
+    const maskAsArray = await mask.getDataAsArray();
+    const indexes = maskAsArray
       .reduce((acc, cv) => [...acc, ...cv], [])
       .reduce((acc, value, index) => {
         if (value > th) {
@@ -48,14 +52,18 @@ export class SpectrometerService {
         return acc;
       }, []);
 
-    const imageData = (await image.getDataAsArray()).reduce((acc, cv) => [...acc, ...cv], []);
+    const imageDataAsArray = await image.getDataAsArray();
+    const imageData = imageDataAsArray.reduce((acc, cv) => [...acc, ...cv], []);
     const cleanValues = indexes.map(
       (index) => imageData[index].reduce((acc, cv) => Number(acc) + Number(cv), 0) / 3,
     );
-    const cleanValuesLength = cleanValues.length;
-    const cleanValuesSum = cleanValues.reduce((acc, cv) => Number(acc) + Number(cv), 0);
-    const cleanValuesMean = cleanValuesSum / cleanValuesLength;
-    return cleanValuesMean;
+    if (cleanValues.length) {
+      const cleanValuesLength = cleanValues.length;
+      const cleanValuesSum = cleanValues.reduce((acc, cv) => Number(acc) + Number(cv), 0);
+      const cleanValuesMean = cleanValuesSum / cleanValuesLength;
+      return cleanValuesMean;
+    }
+    return 0;
   }
 
   public get spectroMetricObservable(): Observable<number> {

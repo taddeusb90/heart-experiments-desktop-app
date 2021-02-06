@@ -49,6 +49,7 @@ export class DataStoreService {
 
   public insertSessionInfo = async (sessionInfo: SessionInfo): Promise<any> => {
     const { sessionId, createdAt, imageLocation, spectroMetric, type, prediction } = sessionInfo;
+    console.log('spectroMetric', spectroMetric, 'prediction', prediction);
     await this.db.run(
       'INSERT INTO session_info(session_id, created_at, image_location, spectro_metric, type, prediction) VALUES (?, ?, ?, ?, ?, ?);',
       [
@@ -81,7 +82,7 @@ export class DataStoreService {
 	      session_id,
 	      (id-(select id from session_info where session_id= ${sessionId} limit 1))/400 as batch,
         avg(spectro_metric) as average_metric,
-        (avg(prediction) * 10) as average_prediction,
+        avg(prediction)*10 as average_prediction
       FROM session_info
       WHERE session_id = ${sessionId}
       group by rn/400;`);
