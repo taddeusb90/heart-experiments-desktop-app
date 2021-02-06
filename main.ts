@@ -5,7 +5,9 @@ import { app, BrowserWindow, screen } from 'electron';
 let win: BrowserWindow = null;
 const args = process.argv.slice(1),
   serve = args.some((val) => val === '--serve');
-
+// if (process.platform === 'win32' && !process.env.OPENCV4NODEJS_DISABLE_AUTOBUILD) {
+//   process.env.path += ';' + require('../renderer/node_modules/opencv-build').opencvBinDir;
+// }
 function createWindow(): BrowserWindow {
   const electronScreen = screen,
     size = electronScreen.getPrimaryDisplay().workAreaSize;
