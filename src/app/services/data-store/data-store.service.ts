@@ -29,7 +29,7 @@ export class DataStoreService {
           'CREATE TABLE IF NOT EXISTS sessions (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, session INTEGER NOT NULL, created_at DATE NOT NULL);',
         );
         db.exec(
-          'CREATE TABLE IF NOT EXISTS session_info (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, session_id INTEGER NOT NULL, created_at DATE NOT NULL, image_location TEXT NOT NULL, spectro_metric REAL NOT NULL, type TEXT NOT NULL);',
+          'CREATE TABLE IF NOT EXISTS session_info (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, session_id INTEGER NOT NULL, created_at DATE NOT NULL, image_location TEXT NOT NULL, spectro_metric REAL NOT NULL, type TEXT NOT NULL, prediction INTEGER);',
         );
         this.db = db;
       });
