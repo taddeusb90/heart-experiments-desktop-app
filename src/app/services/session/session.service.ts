@@ -75,7 +75,9 @@ export class SessionService {
           this.predictions.length) *
           10,
       );
-      this.handleDecellularizationPercentage(this.decellularizationPercentage);
+      if (this.predictions.length === 400) {
+        this.handleDecellularizationPercentage(this.decellularizationPercentage);
+      }
     });
 
     // setTimeout(() => {

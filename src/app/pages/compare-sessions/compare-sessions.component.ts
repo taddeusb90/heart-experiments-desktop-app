@@ -12,6 +12,7 @@ export class CompareSessionsComponent implements OnInit {
   public sessionData: any[] = [];
   public sessionsInfo: any[][] = [];
   public metrics: number[][] = [];
+  public predictions: number[][] = [];
   public deltas: number[][] = [];
   public maxLength: number;
   public displayedColumns: string[] = ['ind', 'batch'];
@@ -37,6 +38,7 @@ export class CompareSessionsComponent implements OnInit {
       );
       this.numberOfSessions = this.sessionsInfo.length;
       this.metrics = this.sessionsInfo.map((arr) => arr.map((item) => item.average_metric));
+      this.predictions = this.sessionsInfo.map((arr) => arr.map((item) => item.average_prediction));
       this.deltas = this.sessionsInfo.map((arr) => arr.map((item) => item.delta));
       this.maxLength = Math.max(...this.sessionsInfo.map((items) => items.length));
       let batch = 0;

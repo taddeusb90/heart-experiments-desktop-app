@@ -73,6 +73,9 @@ export class ClassifierService {
   };
 
   loadImage = async (filePath: string): Promise<any> => {
+    // const image = this.cv.imread(
+    //   'D:\\Projects\\heart-experiments\\data\\sessions\\1605859460\\incomplete\\1605859461.jpg',
+    // );
     const image = await this.cv.imread(filePath);
     return image;
   };
@@ -84,6 +87,7 @@ export class ClassifierService {
       height = 650;
     const rect = new this.cv.Rect(left, top, width, height);
     const croppedImage = await image.getRegion(rect);
+    // this.cv.imwrite('cropped.jpg');
     return croppedImage;
   };
 

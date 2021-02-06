@@ -1,39 +1,42 @@
 <div class="view-session-container" *ngIf="metrics">
-	<p>View session: {{sessionId}}</p>
-	<div class="charts">
-		<div>
-			<app-line-chart [data]="metrics"></app-line-chart>
-			<p>Average luminosity in time</p>
-		</div>
-		<div>
-			<app-line-chart [data]="deltas"></app-line-chart>
-			<p>Deltas in time	</p>
-		</div>
-	</div>
-	<table mat-table [dataSource]="sessionInfo" class="mat-elevation-z8">
-		<ng-container matColumnDef="batch">
-			<th mat-header-cell *matHeaderCellDef> No. </th>
-			<td mat-cell *matCellDef="let element">{{element.batch + 1}}</td>
-		</ng-container>
+  <p>View session: {{ sessionId }}</p>
+  <div class="charts">
+    <div>
+      <app-line-chart [data]="metrics"></app-line-chart>
+      <p>Average luminosity in time</p>
+    </div>
+    <div>
+      <app-line-chart [data]="deltas"></app-line-chart>
+      <p>Deltas in time</p>
+    </div>
+  </div>
+  <table mat-table [dataSource]="sessionInfo" class="mat-elevation-z8">
+    <ng-container matColumnDef="batch">
+      <th mat-header-cell *matHeaderCellDef>No.</th>
+      <td mat-cell *matCellDef="let element">{{ element.batch + 1 }}</td>
+    </ng-container>
 
-		<ng-container matColumnDef="rn">
-			<th mat-header-cell *matHeaderCellDef> Row #.</th>
-			<td mat-cell *matCellDef="let element">{{element.rn}}</td>
-		</ng-container>
+    <ng-container matColumnDef="rn">
+      <th mat-header-cell *matHeaderCellDef>Row #.</th>
+      <td mat-cell *matCellDef="let element">{{ element.rn }}</td>
+    </ng-container>
 
-		<ng-container matColumnDef="average_metric">
-			<th mat-header-cell *matHeaderCellDef> Session </th>
-			<td mat-cell *matCellDef="let element"> {{element.average_metric}} </td>
-		</ng-container>
+    <ng-container matColumnDef="average_metric">
+      <th mat-header-cell *matHeaderCellDef>Session</th>
+      <td mat-cell *matCellDef="let element">{{ element.average_metric }}</td>
+    </ng-container>
 
-		<ng-container matColumnDef="delta">
-			<th mat-header-cell *matHeaderCellDef> Delta </th>
-			<td mat-cell *matCellDef="let element"> {{element.delta}} </td>
-		</ng-container>
+    <ng-container matColumnDef="average_prediction">
+      <th mat-header-cell *matHeaderCellDef>Prediction</th>
+      <td mat-cell *matCellDef="let element">{{ element.average_prediction }}</td>
+    </ng-container>
 
-		<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-		<tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-	</table>
+    <ng-container matColumnDef="delta">
+      <th mat-header-cell *matHeaderCellDef>Delta</th>
+      <td mat-cell *matCellDef="let element">{{ element.delta }}</td>
+    </ng-container>
 
-
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
 </div>

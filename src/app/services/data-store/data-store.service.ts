@@ -80,7 +80,8 @@ export class DataStoreService {
 	      id-(select id from session_info where session_id= ${sessionId} limit 1) as rn,
 	      session_id,
 	      (id-(select id from session_info where session_id= ${sessionId} limit 1))/400 as batch,
-        avg(spectro_metric) as average_metric
+        avg(spectro_metric) as average_metric,
+        (avg(prediction) * 10) as average_prediction,
       FROM session_info
       WHERE session_id = ${sessionId}
       group by rn/400;`);
