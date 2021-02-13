@@ -1,5 +1,19 @@
+## <small>3.0.1 (2021-02-13)</small>
+
+* added predictions column to views ([2b2ab75](https://bitbucket.org/secretcreators/desktop/commits/2b2ab75))
+* latest main ([5dc70b9](https://bitbucket.org/secretcreators/desktop/commits/5dc70b9))
+* newest locks ([51a3309](https://bitbucket.org/secretcreators/desktop/commits/51a3309))
+* no need for these ([e3a706c](https://bitbucket.org/secretcreators/desktop/commits/e3a706c))
+* removed sharp and switched to opencv so build would work ([99f891f](https://bitbucket.org/secretcreators/desktop/commits/99f891f))
+* save changes ([bac01f1](https://bitbucket.org/secretcreators/desktop/commits/bac01f1))
+* windows working build ([ef554b3](https://bitbucket.org/secretcreators/desktop/commits/ef554b3))
+* working sources ([75c01c4](https://bitbucket.org/secretcreators/desktop/commits/75c01c4))
+
+
+
 ## 3.0.0 (2021-02-05)
 
+* 3.0.0 ([41c5019](https://bitbucket.org/secretcreators/desktop/commits/41c5019))
 * added camera component to app ([8f733d8](https://bitbucket.org/secretcreators/desktop/commits/8f733d8))
 * added material design theming ([aa3b40a](https://bitbucket.org/secretcreators/desktop/commits/aa3b40a))
 * added open cv to the mix and fixed build ([d8d275d](https://bitbucket.org/secretcreators/desktop/commits/d8d275d))
