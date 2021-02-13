@@ -20,9 +20,6 @@ export class SpectrometerService {
   }
 
   async setInitialImage(initialImagePath: string): Promise<void> {
-    // this.initialImage = await this.cv.imread(
-    //   '/mnt/F2AE0559AE0517AD/Projects/heart-experiments/data/sessions/1598688579-initial.jpg',
-    // );
     this.initialImage = await this.cv.imread(initialImagePath);
     const rect = new this.cv.Rect(186, 0, 650, 620);
     this.initialImage = await this.initialImage.getRegion(rect);
@@ -30,19 +27,15 @@ export class SpectrometerService {
   }
 
   async measureImage(filePath: string): Promise<number> {
-    let image = await this.cv.imread(filePath);
-    // let image = await this.cv.imread(
-    //   '/mnt/F2AE0559AE0517AD/Projects/heart-experiments/data/sessions/1598688579/complete/1598689243.jpg',
-    // );
-    console.log(image);
+    const image = await this.cv.imread(filePath);
     const rect = new this.cv.Rect(186, 0, 650, 620);
     const region = await image.getRegion(rect);
-    image = region;
-    console.log(this.initialImage);
-    const diff = await this.initialImage.absdiff(image);
+    image.delete();
+    const diff = await this.initialImage.absdiff(region);
     const mask = await diff.cvtColor(this.cv.COLOR_BGR2GRAY);
     const th = 50;
     const maskAsArray = await mask.getDataAsArray();
+    mask.delete();
     const indexes = maskAsArray
       .reduce((acc, cv) => [...acc, ...cv], [])
       .reduce((acc, value, index) => {
@@ -52,7 +45,8 @@ export class SpectrometerService {
         return acc;
       }, []);
 
-    const imageDataAsArray = await image.getDataAsArray();
+    const imageDataAsArray = await region.getDataAsArray();
+    region.delete();
     const imageData = imageDataAsArray.reduce((acc, cv) => [...acc, ...cv], []);
     const cleanValues = indexes.map(
       (index) => imageData[index].reduce((acc, cv) => Number(acc) + Number(cv), 0) / 3,

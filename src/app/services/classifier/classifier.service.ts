@@ -36,9 +36,6 @@ export class ClassifierService {
   };
 
   predict = async (image: any): Promise<number> => {
-    // const image = await this.cv.imread(
-    //   '/mnt/F2AE0559AE0517AD/Projects/heart-experiments/desktop/src/assets/test/10/1599418360.jpg',
-    // );
     const imageBuffer = image.getDataAsArray();
     const imgData = this.context.createImageData(200, 200);
 
@@ -73,9 +70,6 @@ export class ClassifierService {
   };
 
   loadImage = async (filePath: string): Promise<any> => {
-    // const image = this.cv.imread(
-    //   'D:\\Projects\\heart-experiments\\data\\sessions\\1605859460\\incomplete\\1605859461.jpg',
-    // );
     const image = await this.cv.imread(filePath);
     return image;
   };
@@ -87,7 +81,6 @@ export class ClassifierService {
       height = 650;
     const rect = new this.cv.Rect(left, top, width, height);
     const croppedImage = await image.getRegion(rect);
-    // this.cv.imwrite('cropped.jpg');
     return croppedImage;
   };
 
@@ -97,10 +90,13 @@ export class ClassifierService {
   };
 
   makePrediction = async (imagePath: string): Promise<number> => {
-    let image = await this.loadImage(imagePath);
-    image = await this.cropImage(image);
-    image = await this.resizeImage(image);
-    const prediction = await this.predict(image);
+    const image = await this.loadImage(imagePath);
+    const croppedImage = await this.cropImage(image);
+    image.delete();
+    const resizedImage = await this.resizeImage(croppedImage);
+    croppedImage.delete();
+    const prediction = await this.predict(resizedImage);
+    resizedImage.delete();
     return prediction;
   };
 
