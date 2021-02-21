@@ -55,7 +55,7 @@ export class ClassifierService {
       imgData.data[i + 3] = newImageData[i + 3]; // alpha
     }
 
-    this.handleImageData(imgData);
+    this.context.putImageData(imgData, 10, 10);
 
     const tensor = await this.tf.browser
       .fromPixels(this.context.getImageData(10, 10, 200, 200))
@@ -90,23 +90,15 @@ export class ClassifierService {
   };
 
   makePrediction = async (imagePath: string): Promise<number> => {
-    const image = await this.loadImage(imagePath);
-    const croppedImage = await this.cropImage(image);
-    image.delete();
-    const resizedImage = await this.resizeImage(croppedImage);
-    croppedImage.delete();
+    let image = await this.loadImage(imagePath);
+    let croppedImage = await this.cropImage(image);
+    image = null;
+    let resizedImage = await this.resizeImage(croppedImage);
+    croppedImage = null;
     const prediction = await this.predict(resizedImage);
-    resizedImage.delete();
+    resizedImage = null;
     return prediction;
   };
-
-  public get imageDataObservable(): Observable<ImageData> {
-    return this.imageDataSubject.asObservable();
-  }
-
-  public handleImageData(imageData: ImageData): void {
-    this.imageDataSubject.next(imageData);
-  }
 
   public get predictionObservable(): Observable<number> {
     return this.predictionSubject.asObservable();

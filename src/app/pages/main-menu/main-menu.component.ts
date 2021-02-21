@@ -18,6 +18,10 @@ export class MainMenuComponent {
     this.router.navigate(['session']);
   };
 
+  goToReprocessSessions = (): void => {
+    this.router.navigate(['reprocess-sessions']);
+  };
+
   goToInformation = (): void => {
     this.router.navigate(['info']);
   };

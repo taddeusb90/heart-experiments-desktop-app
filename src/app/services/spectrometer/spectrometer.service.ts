@@ -27,15 +27,15 @@ export class SpectrometerService {
   }
 
   async measureImage(filePath: string): Promise<number> {
-    const image = await this.cv.imread(filePath);
+    let image = await this.cv.imread(filePath);
     const rect = new this.cv.Rect(186, 0, 650, 620);
-    const region = await image.getRegion(rect);
-    image.delete();
+    let region = await image.getRegion(rect);
+    image = null;
     const diff = await this.initialImage.absdiff(region);
-    const mask = await diff.cvtColor(this.cv.COLOR_BGR2GRAY);
+    let mask = await diff.cvtColor(this.cv.COLOR_BGR2GRAY);
     const th = 50;
     const maskAsArray = await mask.getDataAsArray();
-    mask.delete();
+    mask = null;
     const indexes = maskAsArray
       .reduce((acc, cv) => [...acc, ...cv], [])
       .reduce((acc, value, index) => {
@@ -46,7 +46,7 @@ export class SpectrometerService {
       }, []);
 
     const imageDataAsArray = await region.getDataAsArray();
-    region.delete();
+    region = null;
     const imageData = imageDataAsArray.reduce((acc, cv) => [...acc, ...cv], []);
     const cleanValues = indexes.map(
       (index) => imageData[index].reduce((acc, cv) => Number(acc) + Number(cv), 0) / 3,

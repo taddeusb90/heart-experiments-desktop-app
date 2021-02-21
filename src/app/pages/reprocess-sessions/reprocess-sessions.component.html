@@ -1,0 +1,39 @@
+<div class="reprocess-sessions-container">
+	<h2>Reprocess sessions</h2>
+	<app-classifier-ui></app-classifier-ui>
+	<table mat-table [dataSource]="sessions" class="mat-elevation-z8">
+		<ng-container matColumnDef="id">
+			<th mat-header-cell *matHeaderCellDef> No. </th>
+			<td mat-cell *matCellDef="let element">{{element.id}}</td>
+		</ng-container>
+
+		<ng-container matColumnDef="session">
+			<th mat-header-cell *matHeaderCellDef> Session </th>
+			<td mat-cell *matCellDef="let element"> {{element.session}} </td>
+		</ng-container>
+
+		<ng-container matColumnDef="created_at">
+			<th mat-header-cell *matHeaderCellDef> Created at </th>
+			<td mat-cell *matCellDef="let element"> {{element.created_at}} </td>
+		</ng-container>
+		
+		<ng-container matColumnDef="items">
+			<th mat-header-cell *matHeaderCellDef> Items </th>
+			<td mat-cell *matCellDef="let element"> {{element.items}} </td>
+		</ng-container>
+
+		<ng-container matColumnDef="view">
+			<th mat-header-cell *matHeaderCellDef>  </th>
+			<td mat-cell *matCellDef="let element"> <a mat-raised-button routerLink="/view-session/{{element.id}}"> View </a></td>
+		</ng-container>
+
+		<ng-container matColumnDef="reprocess">
+			<th mat-header-cell *matHeaderCellDef>  </th>
+			<td mat-cell *matCellDef="let element"> <a mat-raised-button (click)="reprocessSession(element.id, element)"> Reprocess </a> 	<mat-progress-bar *ngIf="element.show" mode="determinate" [value]="element.progress || 0"></mat-progress-bar></td>
+		</ng-container>
+
+		<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  	<tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+	</table>
+
+</div>

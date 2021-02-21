@@ -70,9 +70,26 @@ export class DataStoreService {
     return data;
   };
 
-  public getAllSessionInfo = async (sessionId): Promise<any> => {
+  public getAllSessionInfo = async (sessionId): Promise<any[]> => {
     const data = await this.db.all('SELECT * FROM session_info where session_id = ?', [sessionId]);
     return data;
+  };
+
+  public updateSessionInfoItem = async (
+    spectroMetric: number,
+    prediction: number,
+    sessionId: number,
+    imageName: string,
+  ): Promise<void> => {
+    await this.db.run(
+      'UPDATE session_info SET spectro_metric = $spectroMetric, prediction = $prediction WHERE session_id = $sessionId AND image_location LIKE $imageName;',
+      {
+        $spectroMetric: spectroMetric,
+        $prediction: prediction,
+        $sessionId: sessionId,
+        $imageName: `%${imageName}`,
+      },
+    );
   };
 
   public getAggregatedSessionInfo = async (sessionId): Promise<any> => {

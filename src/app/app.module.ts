@@ -12,10 +12,12 @@ import { SessionModule } from './pages/session/session.module';
 import { MainMenuModule } from './pages/main-menu/main-menu.module';
 import { ViewSessionModule } from './pages/view-session/view-session.module';
 import { SessionHistoryModule } from './pages/session-history/session-history.module';
+import { ReprocessSessionsModule } from './pages/reprocess-sessions/reprocess-sessions.module';
 import { AppComponent } from './app.component';
 import { WebviewDirective } from './directives/webview/webview.directive';
 import { MaterialModule } from './material.module';
 import { LineChartModule } from './components/line-chart/line-chart.module';
+import { ClassifierUiModule } from './components/classifier-ui/classifier-ui.module';
 import { CompareSessionsModule } from './pages/compare-sessions/compare-sessions.module';
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
@@ -33,9 +35,11 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     CompareSessionsModule,
     ViewSessionModule,
     SessionHistoryModule,
+    ReprocessSessionsModule,
     AppRoutingModule,
     MaterialModule,
     LineChartModule,
+    ClassifierUiModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
