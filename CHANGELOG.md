@@ -1,5 +1,12 @@
+## <small>3.0.3 (2021-02-22)</small>
+
+* fix leaks for classifier ([6c82536](https://bitbucket.org/secretcreators/desktop/commits/6c82536))
+
+
+
 ## <small>3.0.2 (2021-02-22)</small>
 
+* 3.0.2 ([8473144](https://bitbucket.org/secretcreators/desktop/commits/8473144))
 * Fix memory leaks ([ebc5259](https://bitbucket.org/secretcreators/desktop/commits/ebc5259))
 * Fixed memory leak ([b659cf3](https://bitbucket.org/secretcreators/desktop/commits/b659cf3))
 * Fixed memory leaks and implemented reprocessing functionality ([94687a9](https://bitbucket.org/secretcreators/desktop/commits/94687a9))
