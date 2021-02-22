@@ -1,5 +1,14 @@
+## <small>3.0.2 (2021-02-22)</small>
+
+* Fix memory leaks ([ebc5259](https://bitbucket.org/secretcreators/desktop/commits/ebc5259))
+* Fixed memory leak ([b659cf3](https://bitbucket.org/secretcreators/desktop/commits/b659cf3))
+* Fixed memory leaks and implemented reprocessing functionality ([94687a9](https://bitbucket.org/secretcreators/desktop/commits/94687a9))
+
+
+
 ## <small>3.0.1 (2021-02-13)</small>
 
+* 3.0.1 ([ddba4df](https://bitbucket.org/secretcreators/desktop/commits/ddba4df))
 * added predictions column to views ([2b2ab75](https://bitbucket.org/secretcreators/desktop/commits/2b2ab75))
 * latest main ([5dc70b9](https://bitbucket.org/secretcreators/desktop/commits/5dc70b9))
 * newest locks ([51a3309](https://bitbucket.org/secretcreators/desktop/commits/51a3309))
