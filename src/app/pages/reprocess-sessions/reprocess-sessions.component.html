@@ -29,7 +29,7 @@
 
 		<ng-container matColumnDef="reprocess">
 			<th mat-header-cell *matHeaderCellDef>  </th>
-			<td mat-cell *matCellDef="let element"> <a mat-raised-button (click)="reprocessSession(element.id, element)"> Reprocess </a> 	<mat-progress-bar *ngIf="element.show" mode="determinate" [value]="element.progress || 0"></mat-progress-bar></td>
+			<td mat-cell *matCellDef="let element"> <a mat-raised-button (click)="reprocessSession(element.id, element)"> Reprocess </a> 	<mat-progress-bar *ngIf="showProgress(element)" mode="determinate" [value]="activeProgress"></mat-progress-bar></td>
 		</ng-container>
 
 		<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

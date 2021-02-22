@@ -19,6 +19,8 @@ export class ReprocessSessionsComponent implements OnInit {
   private model: any;
   public canvas: HTMLCanvasElement;
   public context: CanvasRenderingContext2D;
+  public activeProgress = 0;
+  public elementIdForProgress: number;
 
   constructor(
     private router: Router,
@@ -84,6 +86,7 @@ export class ReprocessSessionsComponent implements OnInit {
   };
 
   classifyImage = async (filePath: string): Promise<number> => {
+    this.tf.engine().startScope();
     let image = await this.cv.imread(filePath);
     const left = 170,
       top = 40,
@@ -122,6 +125,11 @@ export class ReprocessSessionsComponent implements OnInit {
     const normalized = scaled.expandDims();
     const prediction = await this.model.predict(normalized).dataSync();
     const predictedClass = prediction.indexOf(Math.max(...prediction));
+    this.tf.dispose(tensor);
+    this.tf.dispose(scaled);
+    this.tf.dispose(normalized);
+    this.tf.dispose(prediction);
+    this.tf.engine().endScope();
 
     return predictedClass;
   };
@@ -151,13 +159,15 @@ export class ReprocessSessionsComponent implements OnInit {
 
     sessionInfo.shift();
     // eslint-disable-next-line no-param-reassign
-    element.progress = (initialInfoLength - sessionInfo.length * 100) / initialInfoLength;
+    this.activeProgress = ((initialInfoLength - sessionInfo.length) * 100) / initialInfoLength;
     if (sessionInfo.length) {
       await this.processSessionInfoItem(sessionInfo, element, initialInfoLength);
     }
   };
 
   reprocessSession = async (sessionId: string, element: any): Promise<void> => {
+    this.activeProgress = 0;
+    this.elementIdForProgress = element.id;
     const sessionInfo = await this.dataStoreService.getAllSessionInfo(sessionId);
     const initialInfoLength = sessionInfo.length;
     element.show = true;
@@ -168,4 +178,6 @@ export class ReprocessSessionsComponent implements OnInit {
     this.model = await this.tf.loadLayersModel('assets/model/model.json');
     console.log('Finished loading model');
   };
+
+  showProgress = (element: any): boolean => element.id === this.elementIdForProgress;
 }
