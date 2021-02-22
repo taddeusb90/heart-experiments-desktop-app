@@ -36,6 +36,7 @@ export class ClassifierService {
   };
 
   predict = async (image: any): Promise<number> => {
+    this.tf.engine().startScope();
     const imageBuffer = image.getDataAsArray();
     const imgData = this.context.createImageData(200, 200);
 
@@ -66,6 +67,11 @@ export class ClassifierService {
     const prediction = await this.model.predict(normalized).dataSync();
     const predictedClass = prediction.indexOf(Math.max(...prediction));
     this.handlePrediction(predictedClass);
+    this.tf.dispose(tensor);
+    this.tf.dispose(scaled);
+    this.tf.dispose(normalized);
+    this.tf.dispose(prediction);
+    this.tf.engine().endScope();
     return predictedClass;
   };
 
