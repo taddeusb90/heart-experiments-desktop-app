@@ -19,6 +19,8 @@ import { MaterialModule } from './material.module';
 import { LineChartModule } from './components/line-chart/line-chart.module';
 import { ClassifierUiModule } from './components/classifier-ui/classifier-ui.module';
 import { CompareSessionsModule } from './pages/compare-sessions/compare-sessions.module';
+import { BackButtonModule } from './components/back-button/back-button.module';
+
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -39,6 +41,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     AppRoutingModule,
     MaterialModule,
     LineChartModule,
+    BackButtonModule,
     ClassifierUiModule,
     TranslateModule.forRoot({
       loader: {

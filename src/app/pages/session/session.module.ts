@@ -6,6 +6,7 @@ import { CameraComponent } from '../../components/camera/camera.component';
 import { MaterialModule } from '../../material.module';
 import { LineChartModule } from '../../components/line-chart/line-chart.module';
 import { ClassifierUiModule } from '../../components/classifier-ui/classifier-ui.module';
+import { BackButtonModule } from '../../components/back-button/back-button.module';
 import { SessionComponent } from './session.component';
 import { SessionRoutingModule } from './session-routing.module';
 
@@ -18,6 +19,7 @@ import { SessionRoutingModule } from './session-routing.module';
     MaterialModule,
     LineChartModule,
     ClassifierUiModule,
+    BackButtonModule,
   ],
 })
 export class SessionModule {}

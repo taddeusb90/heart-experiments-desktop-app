@@ -1,5 +1,6 @@
 <div class="reprocess-sessions-container">
 	<h2>Reprocess sessions</h2>
+	<app-back-button [destination]="'main-menu'"></app-back-button>
 	<app-classifier-ui></app-classifier-ui>
 	<table mat-table [dataSource]="sessions" class="mat-elevation-z8">
 		<ng-container matColumnDef="id">
